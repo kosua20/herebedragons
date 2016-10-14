@@ -1,0 +1,10 @@
+build/
+.DS_Store
+tools/
+Debug/
+Release/
+x64/
+.vs/
+*.VC.db
+*.user
+*.xcuserstate
