@@ -1,0 +1,12 @@
+build/
+.DS_Store
+GL_Template.wiki/
+GL_Template.xcodeproj/
+tools/
+ressources/spheres/
+Debug/
+Release/
+x64/
+.vs/
+*.VC.db
+*.user
