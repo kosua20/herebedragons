@@ -1,5 +1,6 @@
 #Here be dragons
-###Hic sunt dracones.
+
+> Hic sunt dracones.
 
 This repository contains multiple implementations of the same 3D scene, using different APIs and frameworks on various platforms. The goal is to provide a comparison between multiple rendering methods. This is inherently biased due to the variety of algorithms used and available CPU/GPU configurations, but can hopefully still provide interesting insights on 3D rendering.
 
