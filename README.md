@@ -26,11 +26,14 @@ In the directory of each version, one can find the source code, the correspondin
 
 ##Ressources
 The scene is composed of four main elements:
+
 - a plane representing the ground, with a pavement texture.
 - a dragon (the Stanford dragon).
 - a monkey head ('Suzanne') rotating around its vertical axis.
 - a skybox surrounding the scene, textured with a cloudy sky.
+
 Additionally, the sun is simulated by using a directional light, and the camera should be able to rotate around the scene.
+The initial 3D models and textures are contained in the OpenGL `ressources` [directory](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861/ressources).
 
 ##OpenGL
 The OpenGL version is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
