@@ -8,7 +8,7 @@ This repository contains multiple implementations of the same 3D scene, using di
 
 The following versions are currently available:
 
-- [OpenGL](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861) 
+- [OpenGL](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861) ([readme below](#opengl) )
 - [WebGL](https://github.com/kosua20/herebedragons/tree/master/webgl)
 - [SceneKit](https://github.com/kosua20/herebedragons/tree/master/scenekit)
 - [Blender Cycles](https://github.com/kosua20/herebedragons/tree/master/cycles)
