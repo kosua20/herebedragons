@@ -12,6 +12,8 @@ The texture are palettized, to be able to fit in one of the VRAM banks (4MB shar
 
 Directional lighting is performed by the hardware. Shadow mapping is replaced by a basic implementation of shadow volumes, using a simple stencil buffer provided by the API. Because of the low-power ARM CPU, they can't be computed in real-time. For the static dragon, a shadow volume was handcrafted in Blender ; for the moving monkey head, we cheat by using a duplicated and translated version of the mesh to intersect the plane and thus generate the shadow mask.
 
+My progress and experimentations can be seen [here](http://imgur.com/a/XQCEJ).
+
 ![](images/nds2.png)
 
 ![](images/nds3.png)
