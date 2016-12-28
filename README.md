@@ -36,7 +36,7 @@ Additionally, the sun is simulated by using a directional light, and the camera 
 The initial 3D models and textures are contained in the OpenGL `ressources` [directory](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861/ressources).
 
 ##OpenGL
-The OpenGL version is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
+The OpenGL version (available [here](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861)) is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
 
 The following features are implemented:
 - meshes and textures loading
@@ -50,7 +50,7 @@ The following features are implemented:
 - FXAA anti-aliasing
 - Custom internal rendering resolution
 
-The program is part of a more general tutorial project, available at [GL\_Template](https://github.com/kosua20/GL_Template)
+The program is part of a more general tutorial project, available at [GL\_Template](https://github.com/kosua20/GL_Template) (might evolve with time).
 
 ![](images/opengl1.png)
 ![](images/opengl2.png)
