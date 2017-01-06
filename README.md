@@ -11,6 +11,7 @@ The following versions are currently available:
 - [OpenGL](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861) ([readme below](#opengl) )
 - [WebGL](https://github.com/kosua20/herebedragons/tree/master/webgl)
 - [SceneKit](https://github.com/kosua20/herebedragons/tree/master/scenekit)
+- [Unity](https://github.com/kosua20/herebedragons/tree/master/unity)
 - [Blender Cycles](https://github.com/kosua20/herebedragons/tree/master/cycles)
 - [Nintendo DS](https://github.com/kosua20/herebedragons/tree/master/nds)
 
@@ -18,7 +19,6 @@ The following versions are planned:
 
 - Metal
 - Vulkan
-- Unity
 - PlayStation 2
 - Ptah (a custom real-time renderer, see [the Github page](https://github.com/kosua20/PtahRenderer/))
 
