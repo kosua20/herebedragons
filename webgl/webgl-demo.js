@@ -4,12 +4,20 @@ var shadowFramebuffer, blurFramebuffer;
 var projectionMatrix, lightProjectionMatrix;
 
 
+function start(meshes){
+	// Canvas size setup.
+	canvas = document.getElementById("gl-canvas");
+	canvas.style.width = 100 + "%";
+	canvas.style.height = 700 + "px";
+	var devicePixelRatio = 1;
+	canvas.width = devicePixelRatio * canvas.clientWidth;
+	canvas.height = devicePixelRatio * canvas.clientHeight;
 
-function start(){
-	canvas = document.getElementById("glcanvas");
-	initWebGL(canvas);
-	if(!gl){ return; }
+	gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+	if(!gl){ alert("Unable to get GL context."); }
 	
+	// Viewport and options.
+	gl.viewport(0, 0, gl.drawingBufferWidth,gl.drawingBufferHeight);
 	gl.clearColor(0.0,0.0,0.0,1.0);
 	gl.enable(gl.DEPTH_TEST);
 	gl.depthFunc(gl.LEQUAL);
@@ -18,23 +26,21 @@ function start(){
 	gl.frontFace(gl.CCW);
 
 	projectionMatrix = mat4.create();
-	mat4.perspective(projectionMatrix, 1.22, canvas.width / canvas.height, 0.01, 100.0);
+	mat4.perspective(projectionMatrix, 1.22, canvas.clientWidth/canvas.clientHeight, 0.01, 100.0);
 	lightProjectionMatrix = mat4.create();
 	mat4.ortho(lightProjectionMatrix,-1.5,1.5,-1.5,1.5,0.1,10.0);
 
 	shadowFramebuffer = initFramebuffer();
 	blurFramebuffer = initFramebuffer();
-
 	
-	initCubeMap();
+	initCubeMap(meshes.cube);
 	initBlur();
 
 	blurProgram.textureId = shadowFramebuffer.textureId;
 	
-	planeProgram = initObject("plane");
-	suzanneProgram = initObject("suzanne");
-	dragonProgram = initObject("dragon");
-
+	planeProgram = initObject(meshes.plane, "plane");
+	suzanneProgram = initObject(meshes.suzanne, "suzanne");
+	dragonProgram = initObject(meshes.dragon, "dragon");
 
 	planeProgram.shadowTexture = blurFramebuffer.textureId;
 	suzanneProgram.shadowTexture = blurFramebuffer.textureId;
@@ -44,40 +50,10 @@ function start(){
 	suzanneProgram.shininess = 10.0;
 	dragonProgram.shininess = 50.0;
 
-
 	drawScene(0);
 	
 }
 
-function initFramebuffer(){
-	var framebuffer = gl.createFramebuffer();
-	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-    framebuffer.width = 512;
-    framebuffer.height = 512;
-
-    var localTexture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, localTexture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
- 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
- 	
-
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, framebuffer.width, framebuffer.height, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
-   	
-    var renderbuffer = gl.createRenderbuffer();
-    gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
-    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, framebuffer.width, framebuffer.height);
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, localTexture, 0);
-    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderbuffer);
-
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-    framebuffer.textureId = localTexture;
-    return framebuffer;
-}
 
 function drawScene(time){
 
@@ -87,7 +63,6 @@ function drawScene(time){
 	var lightDir4 = vec4.fromValues(1.0,1.0,1.0,0.0);
 	vec4.transformMat4(lightDir4, lightDir4, viewMatrix);
 	var lightDir = vec3.fromValues(lightDir4[0],lightDir4[1],lightDir4[2]);
-
 	var lightViewMatrix = mat4.create();
 	mat4.lookAt(lightViewMatrix,vec3.fromValues(1.0,1.0,1.0),vec3.fromValues(0.0,0.0,0.0),vec3.fromValues(0.0,1.0,0.0));
 
@@ -111,19 +86,19 @@ function drawScene(time){
 	renderObjectShadow(suzanneProgram, modelMatrixSuzanne, lightViewMatrix, lightProjectionMatrix);
 	renderObjectShadow(planeProgram, modelMatrixPlane, lightViewMatrix, lightProjectionMatrix);
 	
+
 	gl.bindFramebuffer(gl.FRAMEBUFFER, blurFramebuffer);
 	gl.disable(gl.DEPTH_TEST);
 	renderBlur();
 	gl.enable(gl.DEPTH_TEST);
+
+
 	gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-	//gl.viewport(0, 0, shadowFramebuffer.width, shadowFramebuffer.height);
-	gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-	
-	
+	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+
 	renderObject(dragonProgram, modelMatrixDragon, viewMatrix, projectionMatrix,lightDir);
 	renderObject(suzanneProgram, modelMatrixSuzanne, viewMatrix, projectionMatrix,lightDir);
 	renderObject(planeProgram, modelMatrixPlane, viewMatrix, projectionMatrix,lightDir);
-
 	renderCubeMap(viewMatrix, projectionMatrix);
 
 
@@ -131,16 +106,12 @@ function drawScene(time){
 }
 
 
+function initObject(mesh, objName){
 
-
-function initObject(objName){
-
-	var stringObj = document.getElementById(objName + "Model");
-	var mesh = new OBJ.Mesh(stringObj.innerHTML);
 	OBJ.initMeshBuffers(gl, mesh);
 
 	//Shaders
-	var objectProgram = initShaders("vs-default", "fs-default");
+	var objectProgram = initShaders(vsDefaultString, fsDefaultString);
 
 	// Attributes
 	gl.useProgram(objectProgram);
@@ -172,7 +143,7 @@ function initObject(objName){
 	
 	gl.useProgram(null);
 
-	var shadowProgram = initShaders("vs-shadow", "fs-shadow");
+	var shadowProgram = initShaders(vsShadowString, fsShadowString);
 
 	gl.useProgram(shadowProgram);
 	shadowProgram.vertexAttribLocation = gl.getAttribLocation(shadowProgram, "v");
@@ -252,22 +223,19 @@ function renderObject(objectProgram, modelMatrix, viewMatrix, projectionMatrix, 
 
 function renderObjectShadow(objectProgram, modelMatrix, viewMatrix, projectionMatrix){
 	gl.useProgram(objectProgram.shadowProgram);
-	
+	// Light MVP
 	var mv = mat4.create();
 	var mvp = mat4.create();
-	
 	mat4.multiply(mv, viewMatrix, modelMatrix);
 	mat4.multiply(mvp, projectionMatrix, mv);
-	
 	objectProgram.lightMVP = mvp;
-
 	var mvpind = gl.getUniformLocation(objectProgram.shadowProgram, "mvp");
    	gl.uniformMatrix4fv(mvpind,false,mvp);
-	
+	// Buffers
 	gl.bindBuffer(gl.ARRAY_BUFFER, objectProgram.vertexBuffer);
 	gl.vertexAttribPointer(objectProgram.shadowProgram.vertexAttribLocation, 3, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray(objectProgram.shadowProgram.vertexAttribLocation);
-
+	// Draw
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, objectProgram.indexBuffer);
 	gl.drawElements(gl.TRIANGLES, objectProgram.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
   	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,null);
@@ -276,11 +244,14 @@ function renderObjectShadow(objectProgram, modelMatrix, viewMatrix, projectionMa
 }
 
 function initBlur(){
-	blurProgram = initShaders("vs-blur", "fs-blur");
-	gl.useProgram(blurProgram);
-	blurProgram.vertexAttribLocation = gl.getAttribLocation(blurProgram, "v");
+	// Full screen quad.
 	var vertices = [-1.0, -1.0,  1.0, -1.0, 1.0,  1.0, -1.0,  1.0];
 	var indices = [ 0,3,1, 3,2,1];
+
+	blurProgram = initShaders(vsBlurString, fsBlurString);
+	gl.useProgram(blurProgram);
+	
+	blurProgram.vertexAttribLocation = gl.getAttribLocation(blurProgram, "v");
 	blurProgram.vertexBuffer = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, blurProgram.vertexBuffer);								
 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -301,7 +272,7 @@ function renderBlur(){
 	gl.bindTexture(gl.TEXTURE_2D, blurProgram.textureId);
 	gl.uniform1i(gl.getUniformLocation(blurProgram, "texture"), 0);
 
-	gl.uniform2f(gl.getUniformLocation(blurProgram, "screenSize"), gl.viewportWidth, gl.viewportHeight);
+	gl.uniform2f(gl.getUniformLocation(blurProgram, "screenSize"), gl.drawingBufferWidth, gl.drawingBufferHeight);
 	gl.bindBuffer(gl.ARRAY_BUFFER, blurProgram.vertexBuffer);
 	gl.vertexAttribPointer(blurProgram.vertexAttribLocation, 2, gl.FLOAT, false, 0, 0);
 	gl.enableVertexAttribArray(blurProgram.vertexAttribLocation);
@@ -315,60 +286,17 @@ function renderBlur(){
 	
 }
 
-function initCubeMap(){
+function initCubeMap(mesh){
+	OBJ.initMeshBuffers(gl, mesh);
 	//Shaders
-	cubeMapProgram = initShaders("vs-cubemap", "fs-cubemap");
-
-	// Attributes
+	cubeMapProgram = initShaders(vsCubemapString, fsCubemapString);
 	gl.useProgram(cubeMapProgram);
+	// Attributes
 	cubeMapProgram.vertexAttribLocation = gl.getAttribLocation(cubeMapProgram, "v");
-	
-	// Data
-	var vertices = [-1.0, -1.0, -1.0, // Front
-					1.0, -1.0, -1.0, 
-					1.0,  1.0, -1.0,
-					-1.0,  1.0, -1.0,
-					1.0,-1.0,-1.0, // Right
-					1.0,-1.0,1.0,
-					1.0,1.0,1.0,
-					1.0,1.0,-1.0,
-					1.0,-1.0,1.0, // Back
-					-1.0,-1.0,1.0,
-					-1.0,1.0,1.0,
-					1.0,1.0,1.0,
-					-1.0,-1.0,1.0, // Left
-					-1.0,-1.0,-1.0,
-					-1.0,1.0,-1.0,
-					-1.0,1.0,1.0,
-					-1.0,1.0,-1.0, // Top
-					1.0,1.0,-1.0,
-					1.0,1.0,1.0,
-					-1.0,1.0,1.0,
-					1.0,-1.0,-1.0, // Bottom
-					-1.0,-1.0,-1.0,
-					-1.0,-1.0,1.0,
-					1.0,-1.0,1.0 ];
-
-	var indices = [ 0,1,3, 3,1,2,
-					4,5,7, 7,5,6,
-					8,9,11, 11,9,10,
-					12,13,15, 15,13,14,
-					16,17,19, 19,17,18,
-					20,21,23, 23,21,22 ];
-
-	cubeMapProgram.vertexBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, cubeMapProgram.vertexBuffer);								
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-
-	cubeMapProgram.indexBuffer = gl.createBuffer();
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeMapProgram.indexBuffer);
-	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
-	
+	cubeMapProgram.vertexBuffer = mesh.vertexBuffer;
+	cubeMapProgram.indexBuffer = mesh.indexBuffer;
+	// Texture
 	cubeMapProgram.textureId = loadTextureCubeMap("textures/cubemap/cubemap"); 
-
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,null);
-	gl.bindBuffer(gl.ARRAY_BUFFER, null);
-	gl.useProgram(null);
 }
 
 function renderCubeMap(viewMatrix, projectionMatrix){
@@ -390,11 +318,18 @@ function renderCubeMap(viewMatrix, projectionMatrix){
 	gl.enableVertexAttribArray(cubeMapProgram.vertexAttribLocation);
 
 	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeMapProgram.indexBuffer);
-	gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+	gl.drawElements(gl.TRIANGLES, cubeMapProgram.indexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
   	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,null);
 
   	gl.bindTexture(gl.TEXTURE_CUBE_MAP, null);
   	gl.useProgram(null);
 }
 
+// On load, download meshes and start the init + render loop.
+window.onload = function(){
+	OBJ.downloadMeshes({ 'dragon': 'models/dragon.obj', 
+						 'suzanne': 'models/suzanne.obj',
+						 'plane': 'models/plane.obj',
+						 'cube': 'models/cube.obj' }, start);
+}
 

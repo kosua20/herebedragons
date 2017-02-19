@@ -145,56 +145,63 @@ function loadTextureCubeMap(baseName){
 	return texture;
 }
 
-function initWebGL(canvas){
-	gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-	gl.viewportWidth = canvas.width;
-	gl.viewportHeight = canvas.height;
-	if(!gl){
-		alert("Unable to get GL context.");
-	}
-}
 
-function initShaders(vertexName, fragmentName){
-	var vertexShader = getShader(gl,vertexName);
-	var fragmentShader = getShader(gl,fragmentName);
-
+function initShaders(vertexString, fragmentString){
+	// Compile shaders.
+  	var vertexShader = getShader(gl.VERTEX_SHADER,vertexString);
+	var fragmentShader = getShader(gl.FRAGMENT_SHADER,fragmentString);
+	// Create program, link shaders.
 	var shaderprogram = gl.createProgram();
 	gl.attachShader(shaderprogram, vertexShader);
 	gl.attachShader(shaderprogram, fragmentShader);
 	gl.linkProgram(shaderprogram);
-
+	// Error check.
 	if(!gl.getProgramParameter(shaderprogram, gl.LINK_STATUS)){
 		alert("Unable to initialize the shader program: " + gl.getProgramInfoLog(shader));
 	}
 	return shaderprogram;
+
 }
 
-function getShader(gl, name){
-	var script, source, type, shader;
-	script = document.getElementById(name);
+function getShader(shaderType, shaderString){
 
-	if(!script){
-		return null;
-	}
-
-	source = script.text;
-
-	if(script.type == "x-shader/x-vertex"){
-		type = gl.VERTEX_SHADER;
-	} else if(script.type == "x-shader/x-fragment"){
-		type = gl.FRAGMENT_SHADER;
-	} else {
-		return null;
-	}
-
-	shader = gl.createShader(type);
-
-	gl.shaderSource(shader, source);
+	var shader = gl.createShader(shaderType);
+	gl.shaderSource(shader, shaderString);
 	gl.compileShader(shader);
 	if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {  
 		alert("An error occurred compiling the shaders: " + gl.getShaderInfoLog(shader));  
 		return null;  
   	}
-
   	return shader;
+
+}
+
+function initFramebuffer(){
+	var framebuffer = gl.createFramebuffer();
+	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+    framebuffer.width = 512;
+    framebuffer.height = 512;
+
+    var localTexture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, localTexture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+ 	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+ 	
+
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, framebuffer.width, framebuffer.height, 0, gl.RGB, gl.UNSIGNED_BYTE, null);
+   	
+    var renderbuffer = gl.createRenderbuffer();
+    gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
+    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, framebuffer.width, framebuffer.height);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, localTexture, 0);
+    gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderbuffer);
+
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    framebuffer.textureId = localTexture;
+    return framebuffer;
 }
