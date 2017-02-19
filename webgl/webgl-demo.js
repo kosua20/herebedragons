@@ -1,14 +1,23 @@
-var gl;
+var gl, canvas;
 var cubeMapProgram, planeProgram, dragonProgram, suzanneProgram, blurProgram;
 var shadowFramebuffer, blurFramebuffer;
 var projectionMatrix, lightProjectionMatrix;
-
+var previousClick = { clientX: 0,  clientY: 0 } ;
+var camera = {
+	verticalAngle: 0.4, 
+	horizontalAngle: 0.7,
+	distance: 2.0 } ;
 
 function start(meshes){
+
+	document.onmousedown = clickDown;
+	document.onmouseup = clickUp;
+	document.onkeydown = keyDown;
+
 	// Canvas size setup.
 	canvas = document.getElementById("gl-canvas");
 	canvas.style.width = 100 + "%";
-	canvas.style.height = 700 + "px";
+	canvas.style.height = 600 + "px";
 	var devicePixelRatio = 1;
 	canvas.width = devicePixelRatio * canvas.clientWidth;
 	canvas.height = devicePixelRatio * canvas.clientHeight;
@@ -20,8 +29,8 @@ function start(meshes){
 	gl.viewport(0, 0, gl.drawingBufferWidth,gl.drawingBufferHeight);
 	gl.clearColor(0.0,0.0,0.0,1.0);
 	gl.enable(gl.DEPTH_TEST);
-	gl.depthFunc(gl.LEQUAL);
-	gl.disable(gl.CULL_FACE);
+	gl.depthFunc(gl.LESS);
+	gl.enable(gl.CULL_FACE);
 	gl.cullFace(gl.BACK);
 	gl.frontFace(gl.CCW);
 
@@ -54,11 +63,42 @@ function start(meshes){
 	
 }
 
+function keyDown(event){
+	if (event.keyCode == 90){
+		camera.distance = Math.max(0.1, camera.distance - 0.05);
+	} else if (event.keyCode == 83){
+		camera.distance += 0.05;
+	}
+}
+
+function clickDown(event){
+	canvas.onmousemove = moveMouse;
+	previousClick.clientX = event.clientX;
+	previousClick.clientY = event.clientY;
+}
+
+function clickUp(event){
+	canvas.onmousemove = null;
+}
+
+function moveMouse(event){
+	camera.horizontalAngle += (event.clientX - previousClick.clientX)*0.01;
+	camera.verticalAngle += (event.clientY - previousClick.clientY)*0.01;
+	camera.verticalAngle = Math.min(Math.max(camera.verticalAngle, -1.57), 1.57);
+	previousClick.clientX = event.clientX;
+	previousClick.clientY = event.clientY;
+}
+
+
 
 function drawScene(time){
 
 	var viewMatrix = mat4.create();
-	mat4.lookAt(viewMatrix,vec3.fromValues(2.0*Math.sin(0.0005*time),1.0,2.0*Math.cos(0.0005*time)),vec3.fromValues(0.0,0.0,0.0),vec3.fromValues(0.0,1.0,0.0));
+	mat4.lookAt(viewMatrix, vec3.fromValues(camera.distance*Math.cos(camera.horizontalAngle)*Math.cos(camera.verticalAngle), 
+											camera.distance*Math.sin(camera.verticalAngle), 
+											camera.distance*Math.sin(camera.horizontalAngle)*Math.cos(camera.verticalAngle)),
+							vec3.fromValues(0.0,0.0,0.0),
+							vec3.fromValues(0.0,1.0,0.0));
 
 	var lightDir4 = vec4.fromValues(1.0,1.0,1.0,0.0);
 	vec4.transformMat4(lightDir4, lightDir4, viewMatrix);
@@ -246,7 +286,7 @@ function renderObjectShadow(objectProgram, modelMatrix, viewMatrix, projectionMa
 function initBlur(){
 	// Full screen quad.
 	var vertices = [-1.0, -1.0,  1.0, -1.0, 1.0,  1.0, -1.0,  1.0];
-	var indices = [ 0,3,1, 3,2,1];
+	var indices = [ 0,1,3, 3,1,2];
 
 	blurProgram = initShaders(vsBlurString, fsBlurString);
 	gl.useProgram(blurProgram);
