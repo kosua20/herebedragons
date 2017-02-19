@@ -14,13 +14,13 @@ The following versions are currently available:
 - [Unity](https://github.com/kosua20/herebedragons/tree/master/unity)
 - [Blender Cycles](https://github.com/kosua20/herebedragons/tree/master/cycles)
 - [Nintendo DS](https://github.com/kosua20/herebedragons/tree/master/nds)
+- [Ptah](https://github.com/kosua20/herebedragons/tree/master/ptah) (a custom real-time renderer, see [the Github page](https://github.com/kosua20/PtahRenderer/))
 
 The following versions are planned:
 
 - Metal
 - Vulkan
 - PlayStation 2
-- Ptah (a custom real-time renderer, see [the Github page](https://github.com/kosua20/PtahRenderer/))
 
 In the directory of each version, one can find the source code, the corresponding ressources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. The only exception is the OpenGL project, which is described below.
 
