@@ -1,4 +1,4 @@
-##WebGL version
+## WebGL version
 
 ![](images/webgl2.png)
 
