@@ -1,4 +1,4 @@
-##Software renderer version - Ptah
+## Software renderer version - Ptah
 
 This version uses a custom software renderer that performs transformations, rasterization and shading on the CPU. More details can be find in this [blog post](http://blog.simonrodriguez.fr/articles/18-02-2017_writing_a_small_software_renderer.html) where a simplified version of the renderer is described. The full code is available in the sub-repository.
 
