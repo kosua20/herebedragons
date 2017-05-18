@@ -17,7 +17,7 @@
 #define ANGULAR_SPEED 0.1f
 #define RADIUS_SPEED 3.0f
 
-Scene::Scene(int width, int height, zbuffer_t * z){
+Scene::Scene(int width, int height, zbuffer_t * z) : _plane(true), _monkey(false), _dragon(false) {
 	_width = width;
 	_height = height;
 	_z = z;

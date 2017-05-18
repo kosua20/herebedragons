@@ -12,7 +12,7 @@ class Object {
 	
 public:
 	
-	Object();
+	Object(bool interpolateTexture);
 	
 	void render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, texbuffer_t * _texbuf);
 	

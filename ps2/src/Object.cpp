@@ -29,7 +29,7 @@ int light_type[1] = {
 	LIGHT_DIRECTIONAL
 };
 
-Object::Object(){
+Object::Object(bool interpolateTexture){
 	
 	object_position[0] = 0.0f;
 	object_position[1] = 0.0f;
@@ -59,7 +59,7 @@ Object::Object(){
 	
 	lod.calculation = LOD_USE_K;
 	lod.max_level = 0;
-	lod.mag_filter = LOD_MAG_LINEAR;
+	lod.mag_filter = interpolateTexture ? LOD_MAG_LINEAR : LOD_MAG_NEAREST;
 	lod.min_filter = LOD_MIN_NEAREST;
 	lod.l = 0;
 	lod.k = 0;
