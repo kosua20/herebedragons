@@ -13,8 +13,9 @@ The following versions are currently available:
 - [SceneKit](https://github.com/kosua20/herebedragons/tree/master/scenekit)
 - [Unity](https://github.com/kosua20/herebedragons/tree/master/unity)
 - [Blender Cycles](https://github.com/kosua20/herebedragons/tree/master/cycles)
-- [Nintendo DS](https://github.com/kosua20/herebedragons/tree/master/nds)
 - [Ptah](https://github.com/kosua20/herebedragons/tree/master/ptah) (a custom real-time renderer, see [the Github page](https://github.com/kosua20/PtahRenderer/))
+- [Nintendo DS](https://github.com/kosua20/herebedragons/tree/master/nds)
+- [Nintendo Game Boy Advance](https://github.com/kosua20/herebedragons/tree/master/gba)
 - [PlayStation 2](https://github.com/kosua20/herebedragons/tree/master/ps2) 
 
 The following versions are planned:
