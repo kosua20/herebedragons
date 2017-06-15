@@ -1,0 +1,391 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F419ED9B1EF32F5400372CFC /* Uniforms.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419ED9A1EF32F5400372CFC /* Uniforms.swift */; };
+		F419ED9D1EF3318000372CFC /* TextureUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F419ED9C1EF3318000372CFC /* TextureUtilities.swift */; };
+		F437F3921DC3B5270058070E /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = F437F3911DC3B5270058070E /* Object.swift */; };
+		F437F3B71DC3C16A0058070E /* dragon.obj in Resources */ = {isa = PBXBuildFile; fileRef = F437F3A11DC3C16A0058070E /* dragon.obj */; };
+		F437F3B81DC3C16A0058070E /* dragon_texture_color.png in Resources */ = {isa = PBXBuildFile; fileRef = F437F3A21DC3C16A0058070E /* dragon_texture_color.png */; };
+		F437F3B91DC3C16A0058070E /* dragon_texture_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = F437F3A31DC3C16A0058070E /* dragon_texture_normal.png */; };
+		F437F3BA1DC3C16A0058070E /* plane.obj in Resources */ = {isa = PBXBuildFile; fileRef = F437F3A41DC3C16A0058070E /* plane.obj */; };
+		F437F3BB1DC3C16A0058070E /* plane_texture_color.png in Resources */ = {isa = PBXBuildFile; fileRef = F437F3A51DC3C16A0058070E /* plane_texture_color.png */; };
+		F437F3BD1DC3C16A0058070E /* plane_texture_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = F437F3A71DC3C16A0058070E /* plane_texture_normal.png */; };
+		F437F3BE1DC3C16A0058070E /* suzanne.obj in Resources */ = {isa = PBXBuildFile; fileRef = F437F3A81DC3C16A0058070E /* suzanne.obj */; };
+		F437F3BF1DC3C16A0058070E /* suzanne_texture_color.png in Resources */ = {isa = PBXBuildFile; fileRef = F437F3A91DC3C16A0058070E /* suzanne_texture_color.png */; };
+		F437F3C01DC3C16A0058070E /* suzanne_texture_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = F437F3AA1DC3C16A0058070E /* suzanne_texture_normal.png */; };
+		F437F3C21DC3CB240058070E /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = F437F3C11DC3CB240058070E /* Camera.swift */; };
+		F437F3C41DC3D60C0058070E /* MatrixUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = F437F3C31DC3D60C0058070E /* MatrixUtilities.swift */; };
+		F45BB5631DC2904A00EA83F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BB5621DC2904A00EA83F0 /* AppDelegate.swift */; };
+		F45BB5651DC2904A00EA83F0 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BB5641DC2904A00EA83F0 /* GameViewController.swift */; };
+		F45BB5671DC2904A00EA83F0 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = F45BB5661DC2904A00EA83F0 /* Shaders.metal */; };
+		F45BB5691DC2904A00EA83F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F45BB5681DC2904A00EA83F0 /* Assets.xcassets */; };
+		F45BB56C1DC2904A00EA83F0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F45BB56A1DC2904A00EA83F0 /* MainMenu.xib */; };
+		F46B041D1EF33B9D00FD8208 /* cubemap.png in Resources */ = {isa = PBXBuildFile; fileRef = F46B041C1EF33B9D00FD8208 /* cubemap.png */; };
+		F4846E3E1EEC1C5800B321EA /* SkyboxObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4846E3D1EEC1C5800B321EA /* SkyboxObject.swift */; };
+		F4846E401EEC1E7700B321EA /* SceneObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4846E3F1EEC1E7700B321EA /* SceneObject.swift */; };
+		F484FC881DC5191B0055B8B5 /* Mesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = F484FC871DC5191B0055B8B5 /* Mesh.swift */; };
+		F4B28C371EECB10200961993 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B28C361EECB10200961993 /* Renderer.swift */; };
+		F4BF37D31DC3FE4C0026CC90 /* cubemap.obj in Resources */ = {isa = PBXBuildFile; fileRef = F4BF37D21DC3FE4C0026CC90 /* cubemap.obj */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F419ED9A1EF32F5400372CFC /* Uniforms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Uniforms.swift; sourceTree = "<group>"; };
+		F419ED9C1EF3318000372CFC /* TextureUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextureUtilities.swift; sourceTree = "<group>"; };
+		F437F3911DC3B5270058070E /* Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
+		F437F3A11DC3C16A0058070E /* dragon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dragon.obj; sourceTree = "<group>"; };
+		F437F3A21DC3C16A0058070E /* dragon_texture_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dragon_texture_color.png; sourceTree = "<group>"; };
+		F437F3A31DC3C16A0058070E /* dragon_texture_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dragon_texture_normal.png; sourceTree = "<group>"; };
+		F437F3A41DC3C16A0058070E /* plane.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = plane.obj; sourceTree = "<group>"; };
+		F437F3A51DC3C16A0058070E /* plane_texture_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plane_texture_color.png; sourceTree = "<group>"; };
+		F437F3A71DC3C16A0058070E /* plane_texture_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plane_texture_normal.png; sourceTree = "<group>"; };
+		F437F3A81DC3C16A0058070E /* suzanne.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = suzanne.obj; sourceTree = "<group>"; };
+		F437F3A91DC3C16A0058070E /* suzanne_texture_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = suzanne_texture_color.png; sourceTree = "<group>"; };
+		F437F3AA1DC3C16A0058070E /* suzanne_texture_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = suzanne_texture_normal.png; sourceTree = "<group>"; };
+		F437F3C11DC3CB240058070E /* Camera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
+		F437F3C31DC3D60C0058070E /* MatrixUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatrixUtilities.swift; sourceTree = "<group>"; };
+		F45BB55F1DC2904A00EA83F0 /* DragonMetal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DragonMetal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F45BB5621DC2904A00EA83F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F45BB5641DC2904A00EA83F0 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		F45BB5661DC2904A00EA83F0 /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		F45BB5681DC2904A00EA83F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F45BB56B1DC2904A00EA83F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F45BB56D1DC2904A00EA83F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F46B041C1EF33B9D00FD8208 /* cubemap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cubemap.png; sourceTree = "<group>"; };
+		F4846E3D1EEC1C5800B321EA /* SkyboxObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkyboxObject.swift; sourceTree = "<group>"; };
+		F4846E3F1EEC1E7700B321EA /* SceneObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneObject.swift; sourceTree = "<group>"; };
+		F484FC871DC5191B0055B8B5 /* Mesh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mesh.swift; sourceTree = "<group>"; };
+		F4B28C361EECB10200961993 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		F4BF37D21DC3FE4C0026CC90 /* cubemap.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cubemap.obj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F45BB55C1DC2904900EA83F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F437F3931DC3C16A0058070E /* ressources */ = {
+			isa = PBXGroup;
+			children = (
+				F4BF37D21DC3FE4C0026CC90 /* cubemap.obj */,
+				F46B041C1EF33B9D00FD8208 /* cubemap.png */,
+				F437F3A11DC3C16A0058070E /* dragon.obj */,
+				F437F3A21DC3C16A0058070E /* dragon_texture_color.png */,
+				F437F3A31DC3C16A0058070E /* dragon_texture_normal.png */,
+				F437F3A41DC3C16A0058070E /* plane.obj */,
+				F437F3A51DC3C16A0058070E /* plane_texture_color.png */,
+				F437F3A71DC3C16A0058070E /* plane_texture_normal.png */,
+				F437F3A81DC3C16A0058070E /* suzanne.obj */,
+				F437F3A91DC3C16A0058070E /* suzanne_texture_color.png */,
+				F437F3AA1DC3C16A0058070E /* suzanne_texture_normal.png */,
+			);
+			path = ressources;
+			sourceTree = "<group>";
+		};
+		F45BB5561DC2904900EA83F0 = {
+			isa = PBXGroup;
+			children = (
+				F45BB5611DC2904A00EA83F0 /* DragonMetal */,
+				F45BB5601DC2904A00EA83F0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F45BB5601DC2904A00EA83F0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F45BB55F1DC2904A00EA83F0 /* DragonMetal.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F45BB5611DC2904A00EA83F0 /* DragonMetal */ = {
+			isa = PBXGroup;
+			children = (
+				F45BB5621DC2904A00EA83F0 /* AppDelegate.swift */,
+				F45BB5641DC2904A00EA83F0 /* GameViewController.swift */,
+				F4B28C361EECB10200961993 /* Renderer.swift */,
+				F437F3C11DC3CB240058070E /* Camera.swift */,
+				F437F3911DC3B5270058070E /* Object.swift */,
+				F4846E3F1EEC1E7700B321EA /* SceneObject.swift */,
+				F4846E3D1EEC1C5800B321EA /* SkyboxObject.swift */,
+				F419ED9A1EF32F5400372CFC /* Uniforms.swift */,
+				F437F3C31DC3D60C0058070E /* MatrixUtilities.swift */,
+				F419ED9C1EF3318000372CFC /* TextureUtilities.swift */,
+				F484FC871DC5191B0055B8B5 /* Mesh.swift */,
+				F45BB5661DC2904A00EA83F0 /* Shaders.metal */,
+				F45BB5681DC2904A00EA83F0 /* Assets.xcassets */,
+				F437F3931DC3C16A0058070E /* ressources */,
+				F45BB56A1DC2904A00EA83F0 /* MainMenu.xib */,
+				F45BB56D1DC2904A00EA83F0 /* Info.plist */,
+			);
+			path = DragonMetal;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F45BB55E1DC2904900EA83F0 /* DragonMetal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F45BB5701DC2904A00EA83F0 /* Build configuration list for PBXNativeTarget "DragonMetal" */;
+			buildPhases = (
+				F45BB55B1DC2904900EA83F0 /* Sources */,
+				F45BB55C1DC2904900EA83F0 /* Frameworks */,
+				F45BB55D1DC2904900EA83F0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DragonMetal;
+			productName = DragonMetal;
+			productReference = F45BB55F1DC2904A00EA83F0 /* DragonMetal.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F45BB5571DC2904900EA83F0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0800;
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = "Simon Rodriguez";
+				TargetAttributes = {
+					F45BB55E1DC2904900EA83F0 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = MM696H2U5V;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = F45BB55A1DC2904900EA83F0 /* Build configuration list for PBXProject "DragonMetal" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F45BB5561DC2904900EA83F0;
+			productRefGroup = F45BB5601DC2904A00EA83F0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F45BB55E1DC2904900EA83F0 /* DragonMetal */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F45BB55D1DC2904900EA83F0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4BF37D31DC3FE4C0026CC90 /* cubemap.obj in Resources */,
+				F437F3BB1DC3C16A0058070E /* plane_texture_color.png in Resources */,
+				F437F3B91DC3C16A0058070E /* dragon_texture_normal.png in Resources */,
+				F437F3BD1DC3C16A0058070E /* plane_texture_normal.png in Resources */,
+				F437F3B81DC3C16A0058070E /* dragon_texture_color.png in Resources */,
+				F437F3C01DC3C16A0058070E /* suzanne_texture_normal.png in Resources */,
+				F45BB5691DC2904A00EA83F0 /* Assets.xcassets in Resources */,
+				F437F3B71DC3C16A0058070E /* dragon.obj in Resources */,
+				F46B041D1EF33B9D00FD8208 /* cubemap.png in Resources */,
+				F437F3BE1DC3C16A0058070E /* suzanne.obj in Resources */,
+				F437F3BA1DC3C16A0058070E /* plane.obj in Resources */,
+				F45BB56C1DC2904A00EA83F0 /* MainMenu.xib in Resources */,
+				F437F3BF1DC3C16A0058070E /* suzanne_texture_color.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F45BB55B1DC2904900EA83F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F45BB5671DC2904A00EA83F0 /* Shaders.metal in Sources */,
+				F4846E401EEC1E7700B321EA /* SceneObject.swift in Sources */,
+				F437F3C21DC3CB240058070E /* Camera.swift in Sources */,
+				F45BB5651DC2904A00EA83F0 /* GameViewController.swift in Sources */,
+				F437F3C41DC3D60C0058070E /* MatrixUtilities.swift in Sources */,
+				F437F3921DC3B5270058070E /* Object.swift in Sources */,
+				F484FC881DC5191B0055B8B5 /* Mesh.swift in Sources */,
+				F45BB5631DC2904A00EA83F0 /* AppDelegate.swift in Sources */,
+				F4B28C371EECB10200961993 /* Renderer.swift in Sources */,
+				F419ED9B1EF32F5400372CFC /* Uniforms.swift in Sources */,
+				F419ED9D1EF3318000372CFC /* TextureUtilities.swift in Sources */,
+				F4846E3E1EEC1C5800B321EA /* SkyboxObject.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F45BB56A1DC2904A00EA83F0 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F45BB56B1DC2904A00EA83F0 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F45BB56E1DC2904A00EA83F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F45BB56F1DC2904A00EA83F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		F45BB5711DC2904A00EA83F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = MM696H2U5V;
+				INFOPLIST_FILE = DragonMetal/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.simonrodriguez.DragonMetal;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		F45BB5721DC2904A00EA83F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = MM696H2U5V;
+				INFOPLIST_FILE = DragonMetal/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.simonrodriguez.DragonMetal;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F45BB55A1DC2904900EA83F0 /* Build configuration list for PBXProject "DragonMetal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F45BB56E1DC2904A00EA83F0 /* Debug */,
+				F45BB56F1DC2904A00EA83F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F45BB5701DC2904A00EA83F0 /* Build configuration list for PBXNativeTarget "DragonMetal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F45BB5711DC2904A00EA83F0 /* Debug */,
+				F45BB5721DC2904A00EA83F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F45BB5571DC2904900EA83F0 /* Project object */;
+}
