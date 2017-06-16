@@ -10,18 +10,20 @@ The following versions are currently available:
 
 - [OpenGL](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861) ([readme below](#opengl) )
 - [WebGL](https://github.com/kosua20/herebedragons/tree/master/webgl)
+- [Metal](https://github.com/kosua20/herebedragons/tree/master/metal)
 - [SceneKit](https://github.com/kosua20/herebedragons/tree/master/scenekit)
 - [Unity](https://github.com/kosua20/herebedragons/tree/master/unity)
 - [Blender Cycles](https://github.com/kosua20/herebedragons/tree/master/cycles)
 - [Ptah](https://github.com/kosua20/herebedragons/tree/master/ptah) (a custom real-time renderer, see [the Github page](https://github.com/kosua20/PtahRenderer/))
 - [Nintendo DS](https://github.com/kosua20/herebedragons/tree/master/nds)
 - [Nintendo Game Boy Advance](https://github.com/kosua20/herebedragons/tree/master/gba)
-- [PlayStation 2](https://github.com/kosua20/herebedragons/tree/master/ps2) 
+- [PlayStation 2](https://github.com/kosua20/herebedragons/tree/master/ps2)  
 
-The following versions are planned:
+The following versions are (tentatively) planned:
 
-- Metal
-- Vulkan
+- Vulkan, DirectX, OpenGL ES
+- other console hardwares
+- another raytracing
 
 In the directory of each version, one can find the source code, the corresponding ressources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. The only exception is the OpenGL project, which is described below.
 
