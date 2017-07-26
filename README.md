@@ -27,7 +27,7 @@ The following versions are (tentatively) planned:
 
 In the directory of each version, one can find the source code, the corresponding ressources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. The only exception is the OpenGL project, which is described below.
 
-## Ressources
+## Resources
 The scene is composed of four main elements:
 
 - a plane representing the ground, with a pavement texture.
