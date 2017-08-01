@@ -38,10 +38,16 @@ The scene is composed of four main elements:
 Additionally, the sun is simulated by using a directional light, and the camera should be able to rotate around the scene.
 The initial 3D models and textures are contained in the OpenGL `ressources` [directory](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861/ressources).
 
+## Other implementations
+Here you can find implementations using some of the above APIs combined with other programming languages, submitted by awesome people!
+
+- An OpenGL + Python version, by cprogrammer1994: [herebedragons-python](https://github.com/cprogrammer1994/herebedragons-python).
+
 ## OpenGL
 The OpenGL version (available [here](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861)) is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
 
 The following features are implemented:
+
 - meshes and textures loading
 - Phong shading/ per-pixel lighting
 - Normal and specular mapping
