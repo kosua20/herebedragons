@@ -16,7 +16,7 @@ Shadows are baked into the texture map of the floor (well, hand-drawn to be hone
 
 I also haven't implemented a proper clipping. As soon as a triangle has a point outside the frustum, it is completely discarded. I simply rely on meshes having a high density of triangles and the PS2 having a safety margin around the visible screen to avoid any on-screen clipped triangle. This works quite well in practice, as the PS2 Graphics synthesizer can process a great amount of geometry.
 
-The compiled executable can be run on real hardware, as confirmed by @DoMiNeLa10 on a PS2 Slim PAL using uLaunchELF. Credit for the three images below goes to DoMiNeLa10, thank you again!
+The compiled executable can be run on real hardware, as confirmed by DoMiNeLa10 on a PS2 Slim PAL using uLaunchELF. Credit for the three images below goes to DoMiNeLa10, thank you again!
 
 ![](images/ps2-5.jpg)
 ![](images/ps2-6.jpg)
