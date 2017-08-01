@@ -6,7 +6,7 @@ Cyles is an offline rendering engine included in the Blender 3D editor. It perfo
 
 Parallax mapping is replaced by displacement mapping, where the plane is modeled as a dense grid of triangles, and the height map is applied directly on those vertices to displace them.
 
-<blockquote class="twitter-video" data-lang="fr"><p lang="en" dir="ltr">And a rendered animation of the same Cycles scene (a bit jerky... some issue with the camera motion path). <a href="https://t.co/92Fa6jn1mY">pic.twitter.com/92Fa6jn1mY</a></p>&mdash; Simon Rodriguez (@simonkosua) <a href="https://twitter.com/simonkosua/status/788138982689366017">17 octobre 2016</a></blockquote> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote class="twitter-video" data-lang="fr"><p lang="en" dir="ltr">And a rendered animation of the same Cycles scene (a bit jerky... some issue with the camera motion path). <a href="https://t.co/92Fa6jn1mY">pic.twitter.com/92Fa6jn1mY</a></p>&mdash; Simon Rodriguez (@simonkosua) <a href="https://twitter.com/simonkosua/status/788138982689366017">17 octobre 2016</a></blockquote>
 
 ![](images/cycles2.png)
 *In the Blender editor.*
