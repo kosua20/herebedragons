@@ -176,11 +176,12 @@ function getShader(shaderType, shaderString){
 
 }
 
-function initFramebuffer(){
-	var framebuffer = gl.createFramebuffer();
-	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-    framebuffer.width = 512;
-    framebuffer.height = 512;
+function initFramebuffer(width, height){
+	var framebuffer = {};
+	framebuffer.id = gl.createFramebuffer();
+	gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer.id);
+    framebuffer.width = width;
+    framebuffer.height = height;
 
     var localTexture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, localTexture);

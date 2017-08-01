@@ -37,7 +37,7 @@ var fsDefaultString = `
 	varying mediump mat3 tbn;
 	varying mediump vec3 pos;
 	varying mediump vec3 lsp;
-	uniform vec3 lightDir;
+	uniform vec4 lightDir;
 	uniform sampler2D texture;
 	uniform sampler2D textureNormal;
 	uniform sampler2D textureShadow;
@@ -72,7 +72,7 @@ var fsDefaultString = `
 		vec3 n = texture2D(textureNormal,uv).rgb;
 		n = normalize(n * 2.0 - 1.0);
 		n = normalize(tbn * n);
-		vec3 l = normalize(lightDir);
+		vec3 l = normalize(lightDir.xyz);
 		float diffuse = max(0.0, dot(n,l));
 		float specular = 0.0;
 		if(diffuse > 0.0){
