@@ -44,7 +44,7 @@ Here you can find implementations using some of the above APIs combined with oth
 - An OpenGL + Python version, by cprogrammer1994: [herebedragons-python](https://github.com/cprogrammer1994/herebedragons-python).
 
 ## OpenGL
-The OpenGL version (available [here](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861)) is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
+The OpenGL version (available [here](https://github.com/kosua20/GL_Template/tree/224031a29a02fc0aa09ebb808417d5607df698fd)) is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
 
 The following features are implemented:
 
