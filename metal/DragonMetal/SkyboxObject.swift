@@ -21,7 +21,7 @@ class SkyboxObject : Object {
 	}
 	
 	override func setFragmentTextures(encoder: MTLRenderCommandEncoder) {
-		encoder.setFragmentTexture(textureColor, at: 0)
+		encoder.setFragmentTexture(textureColor, index: 0)
 	}
 	
 }

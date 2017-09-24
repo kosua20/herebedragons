@@ -83,7 +83,10 @@ class GameViewController: NSViewController, MTKViewDelegate {
 		renderer.update(timeStep : step)
 		
 		// Create a command buffer.
-        let commandBuffer = commandQueue.makeCommandBuffer()
+		guard let commandBuffer = commandQueue.makeCommandBuffer() else {
+			print("Couldn't make command buffer")
+			return
+		}
         commandBuffer.label = "Frame command buffer"
         
         // Semaphore magic (signal when the command buffer has been processed by the GPU).

@@ -32,9 +32,9 @@ class SceneObject : Object {
 	}
 	
 	override func setFragmentTextures(encoder: MTLRenderCommandEncoder) {
-		encoder.setFragmentTexture(textureColor, at: 0)
-		encoder.setFragmentTexture(textureNormal, at: 1)
-		encoder.setFragmentTexture(shadowMap, at: 2)
+		encoder.setFragmentTexture(textureColor, index: 0)
+		encoder.setFragmentTexture(textureNormal, index: 1)
+		encoder.setFragmentTexture(shadowMap, index: 2)
 	}
 	
 }

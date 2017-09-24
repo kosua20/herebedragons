@@ -56,12 +56,12 @@ func matrix_block3x3(m : matrix_float4x4) -> matrix_float3x3 {
 
 
 func matrix_transpose_inverse(m : matrix_float3x3) -> matrix_float3x3 {
-	return matrix_transpose(matrix_invert(m))
+	return m.inverse.transpose
 }
 
 
 func matrix_inverse_transpose(m : matrix_float4x4) -> matrix_float4x4 {
-	return matrix_invert(matrix_transpose(m))
+	return m.transpose.inverse
 }
 
 
@@ -97,12 +97,12 @@ func matrix_rotation(angle: Float, axis: float3) -> matrix_float4x4 {
 
 
 func matrix_scaling(scale: Float) -> matrix_float4x4 {
-	return matrix_from_diagonal(vector4(scale, scale, scale, 1.0))
+	return simd_float4x4(diagonal: vector4(scale, scale, scale, 1.0))
 }
 
 
 func matrix_translation(t: float3) -> matrix_float4x4 {
-	return matrix_from_columns(float4(1.0,0.0,0.0,0.0), float4(0.0,1.0,0.0,0.0), float4(0.0,0.0,1.0,0.0), float4(t.x,t.y,t.z,1.0))
+	return simd_float4x4(float4(1.0,0.0,0.0,0.0), float4(0.0,1.0,0.0,0.0), float4(0.0,0.0,1.0,0.0), float4(t.x,t.y,t.z,1.0))
 }
 
 

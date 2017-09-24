@@ -23,7 +23,7 @@ class Renderer {
 	private var skybox: Object! = nil
 	
 	// Light parameters.
-	private var lightMatrix: matrix_float4x4
+	private var lightMatrix = matrix_float4x4()
 	private let worldLightDir = normalize(float4(1.0,1.0,1.0,0.0))
 	
 	// Final pass states.
@@ -48,7 +48,7 @@ class Renderer {
 		shadowDepthState = device.makeDepthStencilState(descriptor: depthStencilDescriptor)
 		
 		// Load shaders from the library.
-		let defaultLibrary = device.newDefaultLibrary()!
+		let defaultLibrary = device.makeDefaultLibrary()!
 		let objectVertexProgram = defaultLibrary.makeFunction(name: "objectVertex")!
 		let objectFragmentProgram = defaultLibrary.makeFunction(name: "objectFragment")!
 		let skyboxVertexProgram = defaultLibrary.makeFunction(name: "skyboxVertex")!
@@ -77,7 +77,10 @@ class Renderer {
 		shadowTextureDescriptor.storageMode = .private
 		// Usage: as a render target destination and as an input texture in shaders.
 		shadowTextureDescriptor.usage = MTLTextureUsage.renderTarget.union(MTLTextureUsage.shaderRead)
-		let shadowTexture = device.makeTexture(descriptor: shadowTextureDescriptor)
+		guard let shadowTexture = device.makeTexture(descriptor: shadowTextureDescriptor) else {
+			print("Couldn't make shadow texture.")
+			return
+		}
 		
 		// Create the shadow render pass descriptor.
 		shadowRenderDescriptor = MTLRenderPassDescriptor()
@@ -144,22 +147,28 @@ class Renderer {
 		
 		// Shadow pass.
 		// Create a render command encoder.
-		var renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: shadowRenderDescriptor)
-		renderEncoder.label = "Shadow pass"
+		guard let renderEncoderShadow = commandBuffer.makeRenderCommandEncoder(descriptor: shadowRenderDescriptor) else {
+			print("Error encoding shadow pass.")
+			return
+		}
+		renderEncoderShadow.label = "Shadow pass"
 		// Set states.
-		renderEncoder.setFrontFacing(.counterClockwise)
-		renderEncoder.setCullMode(.back)
-		renderEncoder.setDepthStencilState(shadowDepthState)
-		renderEncoder.setRenderPipelineState(shadowPipeline)
+		renderEncoderShadow.setFrontFacing(.counterClockwise)
+		renderEncoderShadow.setCullMode(.back)
+		renderEncoderShadow.setDepthStencilState(shadowDepthState)
+		renderEncoderShadow.setRenderPipelineState(shadowPipeline)
 		// Render.
-		dragon.encodeShadow(renderEncoder: renderEncoder)
-		monkey.encodeShadow(renderEncoder: renderEncoder)
+		dragon.encodeShadow(renderEncoder: renderEncoderShadow)
+		monkey.encodeShadow(renderEncoder: renderEncoderShadow)
 		// Pass finished.
-		renderEncoder.endEncoding()
+		renderEncoderShadow.endEncoding()
 		
 		// Final pass.
 		// New encoder.
-		renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
+		guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else {
+			print("Error encoding main pass.")
+			return
+		}
 		renderEncoder.label = "Main pass"
 		// Set states.
 		renderEncoder.setFrontFacing(.counterClockwise)

@@ -51,7 +51,7 @@ class Object {
 	func update(camera: Camera, vpLight: matrix_float4x4){
 		// Compute all transformations for this frame.
 		parameters.mv = matrix_multiply(camera.viewMatrix, self.model)
-		parameters.invmv = matrix_transpose(matrix_invert(parameters.mv))
+		parameters.invmv = parameters.mv.inverse.transpose
 		parameters.mvp = matrix_multiply(camera.projectionMatrix, parameters.mv)
 		parameters.mvpLight = matrix_multiply(vpLight, self.model)
 	}
@@ -60,13 +60,13 @@ class Object {
 		renderEncoder.pushDebugGroup("Draw " + name)
 		
 		// Set buffers.
-		renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, at: 0)
+		renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
 		// Uniforms for the vertex shader.
-		renderEncoder.setVertexBytes(&parameters, length: MemoryLayout<ObjectConstants>.stride, at: 1)
+		renderEncoder.setVertexBytes(&parameters, length: MemoryLayout<ObjectConstants>.stride, index: 1)
 		// Uniforms for the fragment shader.
 		var localConstants = constants
-		renderEncoder.setFragmentBytes(&localConstants, length: MemoryLayout<GlobalConstants>.stride, at: 0)
-		renderEncoder.setFragmentBytes(&material, length: MemoryLayout<MaterialConstants>.stride, at: 1)
+		renderEncoder.setFragmentBytes(&localConstants, length: MemoryLayout<GlobalConstants>.stride, index: 0)
+		renderEncoder.setFragmentBytes(&material, length: MemoryLayout<MaterialConstants>.stride, index: 1)
 		// Textures.
 		setFragmentTextures(encoder: renderEncoder)
 		// Draw.
@@ -80,9 +80,9 @@ class Object {
 		renderEncoder.pushDebugGroup("Shadow " + name)
 	
 		// Set buffers.
-		renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, at: 0)
+		renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
 		// Uniforms for the fragment shader.
-		renderEncoder.setVertexBytes(&parameters, length: MemoryLayout<ObjectConstants>.stride, at: 1)
+		renderEncoder.setVertexBytes(&parameters, length: MemoryLayout<ObjectConstants>.stride, index: 1)
 		// Draw.
 		renderEncoder.drawIndexedPrimitives(type: .triangle, indexCount: indexCount, indexType: .uint32, indexBuffer: indexBuffer, indexBufferOffset: 0)
 		

@@ -15,11 +15,24 @@ import MetalKit
 extension MTKTextureLoader {
 	
 	func newTexture(withContentsOf url: URL, srgb: Bool)-> MTLTexture {
-		return try! self.newTexture(withContentsOf: url, options: [MTKTextureLoaderOptionGenerateMipmaps: NSNumber(booleanLiteral: true) ,MTKTextureLoaderOptionAllocateMipmaps: NSNumber(booleanLiteral: true), MTKTextureLoaderOptionOrigin : NSString(string: MTKTextureLoaderOriginFlippedVertically), MTKTextureLoaderOptionSRGB : NSNumber(booleanLiteral : srgb)])
+		return try! self.newTexture(URL: url,
+		                            options: [
+										MTKTextureLoader.Option.generateMipmaps: true,
+										MTKTextureLoader.Option.allocateMipmaps: true,
+										MTKTextureLoader.Option.origin: MTKTextureLoader.Origin.flippedVertically,
+										MTKTextureLoader.Option.SRGB : srgb
+									])
 	}
 	
 	func newTextureCubemap(withContentsOf url: URL, srgb: Bool)-> MTLTexture {
-		return try! self.newTexture(withContentsOf: url, options: [MTKTextureLoaderOptionGenerateMipmaps: NSNumber(booleanLiteral: true) ,MTKTextureLoaderOptionAllocateMipmaps: NSNumber(booleanLiteral: true), MTKTextureLoaderOptionOrigin : NSString(string: MTKTextureLoaderOriginFlippedVertically), MTKTextureLoaderOptionSRGB : NSNumber(booleanLiteral : srgb), MTKTextureLoaderOptionCubeLayout : NSString(string: MTKTextureLoaderCubeLayoutVertical) ])
+		return try! self.newTexture(URL: url,
+		                            options: [
+										MTKTextureLoader.Option.generateMipmaps: true,
+										MTKTextureLoader.Option.allocateMipmaps: true,
+										MTKTextureLoader.Option.origin : MTKTextureLoader.Origin.flippedVertically,
+										MTKTextureLoader.Option.SRGB : srgb,
+										MTKTextureLoader.Option.cubeLayout :  MTKTextureLoader.CubeLayout.vertical
+									])
 	}
 	
 }
