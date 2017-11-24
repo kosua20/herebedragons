@@ -18,6 +18,7 @@ The following versions are currently available:
 - [Nintendo DS](https://github.com/kosua20/herebedragons/tree/master/nds)
 - [Nintendo Game Boy Advance](https://github.com/kosua20/herebedragons/tree/master/gba)
 - [PlayStation 2](https://github.com/kosua20/herebedragons/tree/master/ps2)  
+- [PICO-8](https://github.com/kosua20/herebedragons/tree/master/pico8) 
 
 The following versions are (tentatively) planned:
 
