@@ -47,7 +47,7 @@ Object::Object(bool interpolateTexture){
 	prim.mapping = DRAW_ENABLE;
 	prim.fogging = DRAW_DISABLE;
 	prim.blending = DRAW_DISABLE;
-	prim.antialiasing = DRAW_ENABLE;
+	prim.antialiasing = DRAW_DISABLE; // Probably unnecessary? Can be re-enabled later
 	prim.mapping_type = PRIM_MAP_ST;
 	prim.colorfix = PRIM_UNFIXED;
  
@@ -59,8 +59,8 @@ Object::Object(bool interpolateTexture){
 	
 	lod.calculation = LOD_USE_K;
 	lod.max_level = 0;
-	lod.mag_filter = interpolateTexture ? LOD_MAG_LINEAR : LOD_MAG_NEAREST;
-	lod.min_filter = LOD_MIN_NEAREST;
+	lod.mag_filter = interpolateTexture ? LOD_MAG_LINEAR : LOD_MAG_LINEAR;
+	lod.min_filter = LOD_MIN_LINEAR;
 	lod.l = 0;
 	lod.k = 0;
 	
