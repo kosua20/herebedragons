@@ -42,7 +42,8 @@ The initial 3D models and textures are contained in the OpenGL `ressources` [dir
 ## Other implementations
 Here you can find implementations using some of the above APIs combined with other programming languages, submitted by awesome people!
 
-- An OpenGL + Python version, by cprogrammer1994: [herebedragons-python](https://github.com/cprogrammer1994/herebedragons-python).
+- An OpenGL + Python version, by cprogrammer1994: [herebedragons-python](https://github.com/cprogrammer1994/herebedragons-python). (see #11)
+- A Vulkan version, by vazgriz :[vk_dragons](https://github.com/vazgriz/vk_dragons).
 
 ## OpenGL
 The OpenGL version (available [here](https://github.com/kosua20/GL_Template/tree/224031a29a02fc0aa09ebb808417d5607df698fd)) is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
