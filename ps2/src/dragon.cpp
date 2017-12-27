@@ -86,9 +86,9 @@ int main(){
 	zbuffer_t z;
 	framebuffer_t  framebuffers[2];
 	framebuffers[0].width = 640;
-	framebuffers[0].height = 512;
+	framebuffers[0].height = 448;
 	framebuffers[1].width = 640;
-	framebuffers[1].height = 512;
+	framebuffers[1].height = 448;
 	
 	
 	setupContext(framebuffers, z);
