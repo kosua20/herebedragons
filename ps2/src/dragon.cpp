@@ -36,17 +36,17 @@ void setupContext(framebuffer_t * frames, zbuffer_t & z){
 	
 	// Setup the framebuffer.
 	frames[0].mask    = 0;
-	frames[0].psm     = GS_PSM_32;
+	frames[0].psm     = GS_PSM_16;
 	frames[0].address = graph_vram_allocate(frames[0].width, frames[0].height, frames[0].psm, GRAPH_ALIGN_PAGE);
 	
 	frames[1].mask    = 0;
-	frames[1].psm     = GS_PSM_32;
+	frames[1].psm     = GS_PSM_16;
 	frames[1].address = graph_vram_allocate(frames[1].width, frames[1].height, frames[1].psm, GRAPH_ALIGN_PAGE);
 	// Setup the zbuffer.
 	z.enable = DRAW_ENABLE;
 	z.mask = 0;
 	z.method = ZTEST_METHOD_GREATER_EQUAL;
-	z.zsm = GS_ZBUF_32;
+	z.zsm = GS_ZBUF_16;
 	z.address = graph_vram_allocate(frames[0].width,frames[0].height,z.zsm, GRAPH_ALIGN_PAGE);
 	
 	// Set video mode.
