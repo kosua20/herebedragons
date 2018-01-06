@@ -14,6 +14,6 @@ Transformations and vertex processing are hardcoded as much as possible to save 
 
 ![](images/pico8-3.png)
 
-Triangles are rasterized in a scanline fashion: each triangle is split into two triangles sharing an horizontal edge. For each screen line crosed by the triangle , the positions along the triangle edges are computed, and a line is drawn.
+Triangles are rasterized in a scanline fashion: each triangle is split into two triangles sharing an horizontal edge. For each screen line crossed by the triangle , the positions along the triangle edges are computed, and a line is drawn.
 
 
