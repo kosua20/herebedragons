@@ -1,7 +1,8 @@
 ## PICO-8 version
 
 ![](images/pico8-1.png)
- This version is implemented on the PICO-8 virtual console ([official page](https://www.lexaloffle.com/pico-8.php)). It provides a development environment based on LUA, with additional functions to draw to the 128x128 screen. Each program is stored in a 32KB virtual cartridge. 
+
+This version is implemented on the PICO-8 virtual console ([official page](https://www.lexaloffle.com/pico-8.php)). It provides a development environment based on LUA, with additional functions to draw to the 128x128 screen. Each program is stored in a 32KB virtual cartridge. 
 
 ![](output/herebedragons.p8.png)
 
