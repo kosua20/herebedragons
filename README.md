@@ -8,8 +8,9 @@ This repository contains multiple implementations of the same 3D scene, using di
 
 The following versions are currently available:
 
-- [OpenGL](https://github.com/kosua20/GL_Template/tree/224031a29a02fc0aa09ebb808417d5607df698fd) ([readme below](#opengl) )
-- [WebGL](https://github.com/kosua20/herebedragons/tree/master/webgl)
+- [OpenGL](https://github.com/kosua20/GL_Template/tree/herebedragons/) ([readme below](#opengl) )
+- [WebGL](https://github.com/kosua20/herebedragons/tree/master/webgl) 
+- [Vulkan](https://github.com/kosua20/herebedragons/tree/master/vulkan) 
 - [Metal](https://github.com/kosua20/herebedragons/tree/master/metal)
 - [SceneKit](https://github.com/kosua20/herebedragons/tree/master/scenekit)
 - [Unity](https://github.com/kosua20/herebedragons/tree/master/unity)
@@ -22,11 +23,11 @@ The following versions are currently available:
 
 The following versions are (tentatively) planned:
 
-- Vulkan, DirectX, OpenGL ES
+- DirectX, OpenGL ES
 - other console hardwares
 - another raytracing
 
-In the directory of each version, one can find the source code, the corresponding ressources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. The only exception is the OpenGL project, which is described below.
+In the directory of each version, one can find the source code, the corresponding resources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. The only exception is the OpenGL project, which is described below.
 
 ## Resources
 The scene is composed of four main elements:
@@ -37,7 +38,7 @@ The scene is composed of four main elements:
 - a skybox surrounding the scene, textured with a cloudy sky.
 
 Additionally, the sun is simulated by using a directional light, and the camera should be able to rotate around the scene.
-The initial 3D models and textures are contained in the OpenGL `ressources` [directory](https://github.com/kosua20/GL_Template/tree/3de4e116cdd24df300fda42326a7a4e431f7f861/ressources).
+The initial 3D models and textures are contained in the OpenGL `resources` [directory](https://github.com/kosua20/GL_Template/tree/herebedragons/resources).
 
 ## Other implementations
 Here you can find implementations using some of the above APIs combined with other programming languages, submitted by awesome people!
@@ -46,7 +47,7 @@ Here you can find implementations using some of the above APIs combined with oth
 - A Vulkan version, by vazgriz: [vk_dragons](https://github.com/vazgriz/vk_dragons).
 
 ## OpenGL
-The OpenGL version (available [here](https://github.com/kosua20/GL_Template/tree/224031a29a02fc0aa09ebb808417d5607df698fd)) is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
+The OpenGL version (available [here](https://github.com/kosua20/GL_Template/tree/herebedragons/resources)) is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
 
 The following features are implemented:
 
@@ -61,7 +62,7 @@ The following features are implemented:
 - FXAA anti-aliasing
 - Custom internal rendering resolution
 
-The program is part of a more general tutorial project, available at [GL\_Template](https://github.com/kosua20/GL_Template) (might evolve with time).
+The program is part of a more general tutorial project, available at [GL\_Template](https://github.com/kosua20/GL_Template) (might evolve/diverge with time).
 
 ![](images/opengl1.png)
 ![](images/opengl2.png)
