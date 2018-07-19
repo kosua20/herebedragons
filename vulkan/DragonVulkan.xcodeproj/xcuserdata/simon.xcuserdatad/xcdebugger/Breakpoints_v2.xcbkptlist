@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/Object.cpp"
+            timestampString = "553552438.9410321"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "Object::generateDescriptorSets(const VkDevice &amp; device, const VkDescriptorSetLayout &amp; shadowLayout, const VkDescriptorPool &amp; pool, const std::vector&lt;VkBuffer&gt; &amp; constants, const std::vector&lt;VkImageView&gt; &amp; shadowMaps, int count)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/Renderer.cpp"
+            timestampString = "553637980.4788671"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
+            landmarkName = "Renderer::encode(const VkQueue &amp; graphicsQueue, const uint32_t index, VkCommandBuffer &amp; finalCommmandBuffer, VkRenderPassBeginInfo &amp; finalPassInfos, const VkSemaphore &amp; startSemaphore, const VkSemaphore &amp; endSemaphore, const VkFence &amp; submissionFence)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/Swapchain.cpp"
+            timestampString = "553637980.478976"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "241"
+            endingLineNumber = "241"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/Object.cpp"
+            timestampString = "553552438.941345"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "Object::generateDescriptorSets(const VkDevice &amp; device, const VkDescriptorSetLayout &amp; shadowLayout, const VkDescriptorPool &amp; pool, const std::vector&lt;VkBuffer&gt; &amp; constants, const std::vector&lt;VkImageView&gt; &amp; shadowMaps, int count)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/Object.cpp"
+            timestampString = "553552438.941415"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
+            landmarkName = "Object::generateDescriptorSets(const VkDevice &amp; device, const VkDescriptorSetLayout &amp; shadowLayout, const VkDescriptorPool &amp; pool, const std::vector&lt;VkBuffer&gt; &amp; constants, const std::vector&lt;VkImageView&gt; &amp; shadowMaps, int count)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "src/Object.cpp"
+            timestampString = "553552438.941481"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "Object::generateDescriptorSets(const VkDevice &amp; device, const VkDescriptorSetLayout &amp; shadowLayout, const VkDescriptorPool &amp; pool, const std::vector&lt;VkBuffer&gt; &amp; constants, const std::vector&lt;VkImageView&gt; &amp; shadowMaps, int count)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
