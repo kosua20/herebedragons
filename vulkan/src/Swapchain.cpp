@@ -77,9 +77,9 @@ void Swapchain::setup(const int width, const int height) {
 	
 	/// Create depth buffer.
 	VkFormat depthFormat = VulkanUtilities::findDepthFormat(physicalDevice);
-	VulkanUtilities::createImage(physicalDevice, device, parameters.extent.width, parameters.extent.height, depthFormat , VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, false, _depthImage, _depthImageMemory);
-	_depthImageView = VulkanUtilities::createImageView(device, _depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, false);
-	VulkanUtilities::transitionImageLayout(device, commandPool, graphicsQueue, _depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
+	VulkanUtilities::createImage(physicalDevice, device, parameters.extent.width, parameters.extent.height, 1, depthFormat , VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, false, _depthImage, _depthImageMemory);
+	_depthImageView = VulkanUtilities::createImageView(device, _depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, false, 1);
+	VulkanUtilities::transitionImageLayout(device, commandPool, graphicsQueue, _depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false, 1);
 	
 	// Retrieve images in the swap chain.
 	vkGetSwapchainImagesKHR(device, _swapchain, &parameters.count, nullptr);
@@ -90,7 +90,7 @@ void Swapchain::setup(const int width, const int height) {
 	// Create views for each image.
 	_swapchainImageViews.resize(count);
 	for(size_t i = 0; i < count; i++) {
-		_swapchainImageViews[i] = VulkanUtilities::createImageView(device, _swapchainImages[i], parameters.surface.format, VK_IMAGE_ASPECT_COLOR_BIT, false);
+		_swapchainImageViews[i] = VulkanUtilities::createImageView(device, _swapchainImages[i], parameters.surface.format, VK_IMAGE_ASPECT_COLOR_BIT, false, 1);
 	}
 	// Framebuffers.
 	_swapchainFramebuffers.resize(count);

@@ -26,12 +26,12 @@ void ShadowPass::init(const VkPhysicalDevice & physicalDevice,const VkDevice & d
 	depthViews.resize(count);
 	descriptors.resize(count);
 	// Create a sampler for the shadow map.
-	depthSampler = VulkanUtilities::createSampler(device, VK_FILTER_LINEAR, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE);
+	depthSampler = VulkanUtilities::createSampler(device, VK_FILTER_LINEAR, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, 1);
 	// Init shadow pass and framebuffer.
 	// For shadow mapping we only need a depth attachment
 	for(size_t i = 0; i < count; ++i){
-		VulkanUtilities::createImage(physicalDevice, device, size[0], size[1], VK_FORMAT_D32_SFLOAT , VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, false, depthImages[i], depthMemorys[i]);
-		depthViews[i] = VulkanUtilities::createImageView(device, depthImages[i], VK_FORMAT_D32_SFLOAT, VK_IMAGE_ASPECT_DEPTH_BIT, false);
+		VulkanUtilities::createImage(physicalDevice, device, size[0], size[1], 1, VK_FORMAT_D32_SFLOAT , VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, false, depthImages[i], depthMemorys[i]);
+		depthViews[i] = VulkanUtilities::createImageView(device, depthImages[i], VK_FORMAT_D32_SFLOAT, VK_IMAGE_ASPECT_DEPTH_BIT, false, 1);
 	}
 	
 	VkAttachmentDescription attachmentDescription{};

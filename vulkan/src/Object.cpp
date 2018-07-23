@@ -39,12 +39,12 @@ void Object::upload(const VkPhysicalDevice & physicalDevice, const VkDevice & de
 	void* image;
 	int rett = Resources::loadImage("resources/textures/" + _name + "_texture_color.png", texWidth, texHeight, texChannels, &image, true);
 	if(rett != 0){ std::cerr << "Error loading color image." << std::endl; }
-	VulkanUtilities::createTexture(image, texWidth, texHeight, false, physicalDevice, device, commandPool, graphicsQueue, _textureColorImage, _textureColorMemory, _textureColorView);
+	VulkanUtilities::createTexture(image, texWidth, texHeight, false, MAX_MIPMAP_LEVELS, physicalDevice, device, commandPool, graphicsQueue, _textureColorImage, _textureColorMemory, _textureColorView);
 	free(image);
 	
 	rett = Resources::loadImage("resources/textures/" + _name + "_texture_normal.png", texWidth, texHeight, texChannels, &image, true);
 	if(rett != 0){ std::cerr << "Error loading normal image." << std::endl; }
-	VulkanUtilities::createTexture(image, texWidth, texHeight, false, physicalDevice, device, commandPool, graphicsQueue, _textureNormalImage, _textureNormalMemory, _textureNormalView);
+	VulkanUtilities::createTexture(image, texWidth, texHeight, false, MAX_MIPMAP_LEVELS, physicalDevice, device, commandPool, graphicsQueue, _textureNormalImage, _textureNormalMemory, _textureNormalView);
 	free(image);
 }
 

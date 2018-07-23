@@ -45,4 +45,6 @@ struct ObjectInfos {
 	float shininess;
 };
 
+#define MAX_MIPMAP_LEVELS 8
+
 #endif /* common_h */

@@ -9,7 +9,8 @@
 
 #include "common.hpp"
 #include <chrono>
-//struct GLFWwindow;
+
+
 
 class Renderer
 {

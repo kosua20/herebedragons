@@ -495,7 +495,7 @@ void VulkanUtilities::copyBuffer(const VkBuffer & srcBuffer, const VkBuffer & ds
 	endOneShotCommandBuffer(commandBuffer, device, commandPool, queue);
 }
 
-int VulkanUtilities::createImage(const VkPhysicalDevice & physicalDevice, const VkDevice & device, const uint32_t & width, const uint32_t & height, const VkFormat & format, const VkImageTiling & tiling, const VkImageUsageFlags & usage, const VkMemoryPropertyFlags & properties, const bool cube, VkImage & image, VkDeviceMemory & imageMemory){
+int VulkanUtilities::createImage(const VkPhysicalDevice & physicalDevice, const VkDevice & device, const uint32_t & width, const uint32_t & height, const uint32_t & mipCount, const VkFormat & format, const VkImageTiling & tiling, const VkImageUsageFlags & usage, const VkMemoryPropertyFlags & properties, const bool cube, VkImage & image, VkDeviceMemory & imageMemory){
 	// Create image.
 	VkImageCreateInfo imageInfo = {};
 	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -503,7 +503,7 @@ int VulkanUtilities::createImage(const VkPhysicalDevice & physicalDevice, const 
 	imageInfo.extent.width = static_cast<uint32_t>(width);
 	imageInfo.extent.height = static_cast<uint32_t>(height);
 	imageInfo.extent.depth = 1;
-	imageInfo.mipLevels = 1;
+	imageInfo.mipLevels = mipCount;
 	imageInfo.arrayLayers = cube ? 6 : 1;
 	imageInfo.format = format;
 	imageInfo.tiling = tiling;
@@ -548,7 +548,7 @@ void VulkanUtilities::copyBufferToImage(const VkBuffer & srcBuffer, const VkImag
 	endOneShotCommandBuffer(commandBuffer, device, commandPool, queue);
 }
 
-void VulkanUtilities::transitionImageLayout(const VkDevice & device, const VkCommandPool & commandPool, const VkQueue & queue, VkImage & image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, const bool cube) {
+void VulkanUtilities::transitionImageLayout(const VkDevice & device, const VkCommandPool & commandPool, const VkQueue & queue, VkImage & image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, const bool cube, const uint32_t & mipCount) {
 	VkCommandBuffer commandBuffer = beginOneShotCommandBuffer(device, commandPool);
 	
 	VkPipelineStageFlags sourceStage;
@@ -562,7 +562,7 @@ void VulkanUtilities::transitionImageLayout(const VkDevice & device, const VkCom
 	barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barrier.image = image;
 	barrier.subresourceRange.baseMipLevel = 0;
-	barrier.subresourceRange.levelCount = 1;
+	barrier.subresourceRange.levelCount = mipCount;
 	barrier.subresourceRange.baseArrayLayer = 0;
 	barrier.subresourceRange.layerCount = cube ? 6 : 1;
 	// Aspect mask.
@@ -600,7 +600,7 @@ void VulkanUtilities::transitionImageLayout(const VkDevice & device, const VkCom
 	endOneShotCommandBuffer(commandBuffer, device, commandPool, queue);
 }
 
-VkImageView VulkanUtilities::createImageView(const VkDevice & device, const VkImage & image, const VkFormat format, const VkImageAspectFlags aspectFlags, const bool cube) {
+VkImageView VulkanUtilities::createImageView(const VkDevice & device, const VkImage & image, const VkFormat format, const VkImageAspectFlags aspectFlags, const bool cube, const uint32_t & mipCount) {
 	VkImageViewCreateInfo viewInfo = {};
 	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 	viewInfo.image = image;
@@ -608,7 +608,7 @@ VkImageView VulkanUtilities::createImageView(const VkDevice & device, const VkIm
 	viewInfo.format = format;
 	viewInfo.subresourceRange.aspectMask = aspectFlags;
 	viewInfo.subresourceRange.baseMipLevel = 0;
-	viewInfo.subresourceRange.levelCount = 1;
+	viewInfo.subresourceRange.levelCount = mipCount;
 	viewInfo.subresourceRange.baseArrayLayer = 0;
 	viewInfo.subresourceRange.layerCount = cube ? 6 : 1;
 	
@@ -641,7 +641,7 @@ bool VulkanUtilities::hasStencilComponent(VkFormat format) {
 	return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-VkSampler VulkanUtilities::createSampler(const VkDevice & device, const VkFilter filter, const VkSamplerAddressMode mode){
+VkSampler VulkanUtilities::createSampler(const VkDevice & device, const VkFilter filter, const VkSamplerAddressMode mode, const uint32_t mipCount){
 	VkSampler sampler;
 	VkSamplerCreateInfo samplerInfo = {};
 	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -659,14 +659,82 @@ VkSampler VulkanUtilities::createSampler(const VkDevice & device, const VkFilter
 	samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 	samplerInfo.mipLodBias = 0.0f;
 	samplerInfo.minLod = 0.0f;
-	samplerInfo.maxLod = 0.0f;
+	samplerInfo.maxLod = static_cast<float>(mipCount);
 	if (vkCreateSampler(device, &samplerInfo, nullptr, &sampler) != VK_SUCCESS) {
 		std::cerr << "Unable to create a sampler." << std::endl;
 	}
 	return sampler;
 }
-void VulkanUtilities::createTexture(const void * image, const uint32_t width, const uint32_t height, const bool cube, const VkPhysicalDevice & physicalDevice, const VkDevice & device, const VkCommandPool & commandPool, const VkQueue & graphicsQueue, VkImage & textureImage, VkDeviceMemory & textureMemory, VkImageView & textureView){
+
+void VulkanUtilities::generateMipmaps(VkImage & image, const int32_t width, const int32_t height, const bool cube, const uint32_t mipCount, const VkFormat format, const VkPhysicalDevice & physicalDevice, const VkDevice & device, const VkCommandPool & commandPool, const VkQueue & graphicsQueue){
+	// Do we support blitting?
+	VkFormatProperties formatProperties;
+	vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &formatProperties);
+	if (!(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)) {
+		std::cerr << "Bliting not supported for this format." << std::endl;
+		return;
+	}
+	
+	VkImageMemoryBarrier barrier = {};
+	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+	barrier.image = image;
+	barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	barrier.subresourceRange.baseArrayLayer = 0;
+	barrier.subresourceRange.layerCount = cube ? 6 : 1;
+	barrier.subresourceRange.levelCount = 1;
+	// Blit the texture to each mip level.
+	VkCommandBuffer commandBuff = VulkanUtilities::beginOneShotCommandBuffer(device, commandPool);
+	uint32_t currentWidth = width;
+	uint32_t currentHeight = height;
+	for (uint32_t i = 1; i < mipCount; i++) {
+		// Transition level i-1 to transfer layout.
+		barrier.subresourceRange.baseMipLevel = i - 1;
+		barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+		barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+		barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+		vkCmdPipelineBarrier(commandBuff, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr,  0, nullptr, 1, &barrier);
+		// Then, the real blit to level i.
+		VkImageBlit blit = {};
+		blit.srcOffsets[0] = { 0, 0, 0 };
+		blit.srcOffsets[1] = { (int32_t)currentWidth, (int32_t)currentHeight, 1 };
+		blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		blit.srcSubresource.mipLevel = i - 1;
+		blit.srcSubresource.baseArrayLayer = 0;
+		blit.srcSubresource.layerCount = cube ? 6 : 1;
+		blit.dstOffsets[0] = { 0, 0, 0 };
+		blit.dstOffsets[1] = { (int32_t)(currentWidth > 1 ? currentWidth / 2 : 1), (int32_t)(currentHeight > 1 ? currentHeight / 2 : 1), 1 };
+		blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		blit.dstSubresource.mipLevel = i;
+		blit.dstSubresource.baseArrayLayer = 0;
+		blit.dstSubresource.layerCount = cube ? 6 : 1;
+		// Blit using linear filtering for smoother downscaling.
+		vkCmdBlitImage(commandBuff, image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, VK_FILTER_LINEAR);
+		// Force sync, move previous layer to shader readable format..
+		barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+		barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		vkCmdPipelineBarrier(commandBuff, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+		if(currentWidth > 1){ currentWidth /= 2; }
+		if(currentHeight > 1){ currentHeight /= 2; }
+	}
+	// Transition the last level.
+	barrier.subresourceRange.baseMipLevel = mipCount - 1;
+	barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+	barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+	barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+	vkCmdPipelineBarrier(commandBuff, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+	// Submit the commands.
+	VulkanUtilities::endOneShotCommandBuffer(commandBuff, device, commandPool, graphicsQueue);
+}
+
+void VulkanUtilities::createTexture(const void * image, const uint32_t width, const uint32_t height, const bool cube, const uint32_t mipCount, const VkPhysicalDevice & physicalDevice, const VkDevice & device, const VkCommandPool & commandPool, const VkQueue & graphicsQueue, VkImage & textureImage, VkDeviceMemory & textureMemory, VkImageView & textureView){
 	VkDeviceSize imageSize = width * height * 4 * (cube ? 6 : 1);
+	
 	VkBuffer stagingBufferImg;
 	VkDeviceMemory stagingBufferMemoryImg;
 	createBuffer(physicalDevice, device, imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBufferImg, stagingBufferMemoryImg);
@@ -675,17 +743,18 @@ void VulkanUtilities::createTexture(const void * image, const uint32_t width, co
 	memcpy(dataImg, image, static_cast<size_t>(imageSize));
 	vkUnmapMemory(device, stagingBufferMemoryImg);
 	// Create texture image.
-	createImage(physicalDevice, device, width, height, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, cube, textureImage, textureMemory);
+	createImage(physicalDevice, device, width, height, mipCount, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, cube, textureImage, textureMemory);
 	// Prepare the image layout for the transfer (we don't care about what's in it before the copy).
-	transitionImageLayout(device, commandPool, graphicsQueue, textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, cube);
+	transitionImageLayout(device, commandPool, graphicsQueue, textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, cube, mipCount);
 	// Copy from the buffer to the image.
 	copyBufferToImage(stagingBufferImg, textureImage, width, height, device, commandPool, graphicsQueue, cube);
-	// Optimize the layout of the image for sampling.
-	transitionImageLayout(device, commandPool, graphicsQueue, textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, cube);
+	// Generate the mipmaplevels, and optimize the layout of the image for sampling.
+	VulkanUtilities::generateMipmaps(textureImage, width, height, cube, mipCount, VK_FORMAT_R8G8B8A8_UNORM, physicalDevice, device, commandPool, graphicsQueue);
+	// Clean staging buffer.
 	vkDestroyBuffer(device, stagingBufferImg, nullptr);
 	vkFreeMemory(device, stagingBufferMemoryImg, nullptr);
 	// Create texture view.
-	textureView = createImageView(device, textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, cube);
+	textureView = createImageView(device, textureImage, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, cube, mipCount);
 }
 
 VkDeviceSize VulkanUtilities::nextOffset(size_t size){

@@ -38,7 +38,7 @@ Renderer::Renderer(Swapchain & swapchain, const int width, const int height) : _
 	_shadowPass.init(physicalDevice, _device, commandPool,count);
 	
 	// Create sampler.
-	_textureSampler = VulkanUtilities::createSampler(_device, VK_FILTER_LINEAR, VK_SAMPLER_ADDRESS_MODE_REPEAT);
+	_textureSampler = VulkanUtilities::createSampler(_device, VK_FILTER_LINEAR, VK_SAMPLER_ADDRESS_MODE_REPEAT, MAX_MIPMAP_LEVELS);
 	
 	// Objects setup.
 	for(auto & object : _objects){

@@ -47,7 +47,7 @@ void Skybox::upload(const VkPhysicalDevice & physicalDevice, const VkDevice & de
 	for(size_t i = 0; i < 6; ++i){
 		memcpy(mergedImages + i*layerSize, images[i], layerSize);
 	}
-	VulkanUtilities::createTexture(mergedImages, texWidth, texHeight, true, physicalDevice, device, commandPool, graphicsQueue, _textureCubeImage, _textureCubeMemory, _textureCubeView);
+	VulkanUtilities::createTexture(mergedImages, texWidth, texHeight, true, MAX_MIPMAP_LEVELS, physicalDevice, device, commandPool, graphicsQueue, _textureCubeImage, _textureCubeMemory, _textureCubeView);
 	
 	// Cleaning.
 	for(size_t i = 0; i < 6; ++i){
