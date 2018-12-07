@@ -5,22 +5,6 @@
  Code for each version of the scene available at https://github.com/kosua20/herebedragons
  */
 
-#define BONZOMATIC_VERSION
-
-#ifdef BONZOMATIC_VERSION
-
-uniform float fGlobalTime;
-uniform vec2 v2Resolution;
-layout(location = 0) out vec4 out_color;
-
-#define iTime fGlobalTime
-#define iResolution v2Resolution
-#define iMouse ((vec2(fract(0.09*iTime), 0.75))*v2Resolution)
-
-#endif
-
-
-
 /* Uncomment to disable the soft min/max operations and use basic
  unions/intersections instead. This will speed up the compilation
  but degrade the look*/
@@ -39,13 +23,23 @@ layout(location = 0) out vec4 out_color;
 /* Comment to remove the cloud noise in the sky. */
 #define USE_NOISE
 
+
+//// Bonzomatic parameters.
+
+uniform float fGlobalTime;
+uniform vec2 v2Resolution;
+layout(location = 0) out vec4 out_color;
+
+#define iTime fGlobalTime
+#define iResolution v2Resolution
+#define iMouse ((vec2(fract(0.09*iTime), 0.75))*v2Resolution)
+
+
 //// PI defines
 
 #define M_PI (3.14159)
 #define M_PI_2 (2.0*M_PI)
 #define M_PI_O_2 (M_PI/2.0)
-
-
 
 
 //// Transformations
@@ -69,6 +63,7 @@ vec3 transform(vec3 p, vec3 t, vec3 r){
 	rP.yz = rotate(rP.yz, angles.z);
 	return rP;
 }
+
 
 //// Noise utilities
 
@@ -750,15 +745,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 	fragColor = vec4(pow(outColor, vec3(1.0/2.2)), 1.0);
 }
 
-#ifdef BONZOMATIC_VERSION
+
 
 void main( )
 {
 	mainImage(out_color, gl_FragCoord.xy);
 }
-
-#endif
-
-
-
 
