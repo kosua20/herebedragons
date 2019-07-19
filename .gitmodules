@@ -1,6 +1,3 @@
-[submodule "opengl"]
-	path = opengl
-	url = https://github.com/kosua20/GL_Template.git
 [submodule "ptah/renderer"]
 	path = ptah/renderer
 	url = https://github.com/kosua20/PtahRenderer

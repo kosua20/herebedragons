@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F6DD60FB-C5DD-45B5-8DA0-626FE0210ACB}</ProjectGuid>
+    <RootNamespace>GL_Template</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>src\helpers;src\libs;src\libs\glfw\include\;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>src\libs\glfw\lib-win-vc2015\</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>src\helpers;src\libs;src\libs\glfw\include\;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>src\libs\glfw\lib-win-vc2015-64\</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>src\helpers;src\libs;src\libs\glfw\include\;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>src\libs\glfw\lib-win-vc2015\</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>src\helpers;src\libs;src\libs\glfw\include\;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>src\libs\glfw\lib-win-vc2015-64\</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\AmbientQuad.cpp" />
+    <ClCompile Include="src\camera\Camera.cpp" />
+    <ClCompile Include="src\camera\Keyboard.cpp" />
+    <ClCompile Include="src\Framebuffer.cpp" />
+    <ClCompile Include="src\Gbuffer.cpp" />
+    <ClCompile Include="src\helpers\GenerationUtilities.cpp" />
+    <ClCompile Include="src\helpers\GLUtilities.cpp" />
+    <ClCompile Include="src\helpers\MeshUtilities.cpp" />
+    <ClCompile Include="src\helpers\ProgramInfos.cpp" />
+    <ClCompile Include="src\helpers\ResourcesManager.cpp" />
+    <ClCompile Include="src\libs\gl3w\gl3w.cpp" />
+    <ClCompile Include="src\lights\DirectionalLight.cpp" />
+    <ClCompile Include="src\lights\PointLight.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\ScreenQuad.cpp" />
+    <ClCompile Include="src\Skybox.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\AmbientQuad.h" />
+    <ClInclude Include="src\camera\Camera.h" />
+    <ClInclude Include="src\camera\Keyboard.h" />
+    <ClInclude Include="src\Framebuffer.h" />
+    <ClInclude Include="src\Gbuffer.h" />
+    <ClInclude Include="src\helpers\GenerationUtilities.h" />
+    <ClInclude Include="src\helpers\GLUtilities.h" />
+    <ClInclude Include="src\helpers\MeshUtilities.h" />
+    <ClInclude Include="src\helpers\ProgramInfos.h" />
+    <ClInclude Include="src\helpers\ResourcesManager.h" />
+    <ClInclude Include="src\libs\gl3w\gl3w.h" />
+    <ClInclude Include="src\libs\gl3w\glcorearb.h" />
+    <ClInclude Include="src\libs\glm\glm.hpp" />
+    <ClInclude Include="src\libs\stb_image\stb_image.h" />
+    <ClInclude Include="src\libs\tinydir\tinydir.h" />
+    <ClInclude Include="src\lights\DirectionalLight.h" />
+    <ClInclude Include="src\lights\Light.h" />
+    <ClInclude Include="src\lights\PointLight.h" />
+    <ClInclude Include="src\Object.h" />
+    <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\ScreenQuad.h" />
+    <ClInclude Include="src\Skybox.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\gbuffer\ambient.frag" />
+    <None Include="resources\shaders\gbuffer\ambient.vert" />
+    <None Include="resources\shaders\gbuffer\object_gbuffer.frag" />
+    <None Include="resources\shaders\gbuffer\object_gbuffer.vert" />
+    <None Include="resources\shaders\gbuffer\scene_gbuffer.frag" />
+    <None Include="resources\shaders\gbuffer\scene_gbuffer.vert" />
+    <None Include="resources\shaders\gbuffer\skybox_gbuffer.frag" />
+    <None Include="resources\shaders\gbuffer\skybox_gbuffer.vert" />
+    <None Include="resources\shaders\gbuffer\ssao.frag" />
+    <None Include="resources\shaders\gbuffer\ssao.vert" />
+    <None Include="resources\shaders\lights\directional_light.frag" />
+    <None Include="resources\shaders\lights\directional_light.vert" />
+    <None Include="resources\shaders\lights\object_depth.frag" />
+    <None Include="resources\shaders\lights\object_depth.vert" />
+    <None Include="resources\shaders\lights\point_light.frag" />
+    <None Include="resources\shaders\lights\point_light.vert" />
+    <None Include="resources\shaders\lights\point_light_debug.frag" />
+    <None Include="resources\shaders\lights\point_light_debug.vert" />
+    <None Include="resources\shaders\screens\boxblur.frag" />
+    <None Include="resources\shaders\screens\boxblur.vert" />
+    <None Include="resources\shaders\screens\boxblur_float.frag" />
+    <None Include="resources\shaders\screens\boxblur_float.vert" />
+    <None Include="resources\shaders\screens\final_screenquad.frag" />
+    <None Include="resources\shaders\screens\final_screenquad.vert" />
+    <None Include="resources\shaders\screens\fxaa.frag" />
+    <None Include="resources\shaders\screens\fxaa.vert" />
+    <None Include="resources\shaders\screens\screenquad.frag" />
+    <None Include="resources\shaders\screens\screenquad.vert" />
+    <None Include="resources\shaders\screens\tonemap.frag" />
+    <None Include="resources\shaders\screens\tonemap.vert" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,262 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\helpers">
+      <UniqueIdentifier>{318262b6-adc0-4baa-a274-6c4d318820b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera">
+      <UniqueIdentifier>{3029502e-777a-4a25-96a9-23b2bce3e715}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\lights">
+      <UniqueIdentifier>{ceb99fe5-21ae-4979-8e86-e4e8feb1fe8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\gbuffer">
+      <UniqueIdentifier>{b86dc32b-7a33-4482-b9af-6454a0e2815d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\screens">
+      <UniqueIdentifier>{dddd6d62-48e0-4931-9def-b9020685165e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\lights">
+      <UniqueIdentifier>{234e667f-2939-4d5a-98fe-770ecd924a1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libs">
+      <UniqueIdentifier>{022dfdaf-a21f-4749-8160-eb46aa1fca27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libs\gl3w">
+      <UniqueIdentifier>{3a188a85-59e0-4bd6-a559-e3030e24b4ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libs\glm">
+      <UniqueIdentifier>{afcfafd5-2d3d-475b-9b07-54d6d546c654}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libs\stb_image">
+      <UniqueIdentifier>{20ca2e9c-8594-4b3c-800a-e13460f8f962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\libs\tinydir">
+      <UniqueIdentifier>{cfe063bb-5d3b-4fae-9b5e-d4047e1041cf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScreenQuad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helpers\MeshUtilities.cpp">
+      <Filter>Source Files\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\camera\Camera.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\camera\Keyboard.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AmbientQuad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gbuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helpers\GLUtilities.cpp">
+      <Filter>Source Files\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helpers\ProgramInfos.cpp">
+      <Filter>Source Files\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helpers\ResourcesManager.cpp">
+      <Filter>Source Files\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helpers\GenerationUtilities.cpp">
+      <Filter>Source Files\helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lights\PointLight.cpp">
+      <Filter>Source Files\lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lights\DirectionalLight.cpp">
+      <Filter>Source Files\lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\libs\gl3w\gl3w.cpp">
+      <Filter>Source Files\libs\gl3w</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\lights\DirectionalLight.h">
+      <Filter>Source Files\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lights\Light.h">
+      <Filter>Source Files\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lights\PointLight.h">
+      <Filter>Source Files\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="src\helpers\GenerationUtilities.h">
+      <Filter>Source Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\helpers\GLUtilities.h">
+      <Filter>Source Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\helpers\MeshUtilities.h">
+      <Filter>Source Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\helpers\ProgramInfos.h">
+      <Filter>Source Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\helpers\ResourcesManager.h">
+      <Filter>Source Files\helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\camera\Camera.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\camera\Keyboard.h">
+      <Filter>Source Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AmbientQuad.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Framebuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Gbuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Object.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ScreenQuad.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Skybox.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\gl3w\gl3w.h">
+      <Filter>Source Files\libs\gl3w</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\gl3w\glcorearb.h">
+      <Filter>Source Files\libs\gl3w</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\stb_image\stb_image.h">
+      <Filter>Source Files\libs\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\tinydir\tinydir.h">
+      <Filter>Source Files\libs\tinydir</Filter>
+    </ClInclude>
+    <ClInclude Include="src\libs\glm\glm.hpp">
+      <Filter>Source Files\libs\glm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\gbuffer\object_gbuffer.frag">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\gbuffer\object_gbuffer.vert">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\gbuffer\scene_gbuffer.frag">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\gbuffer\scene_gbuffer.vert">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\gbuffer\skybox_gbuffer.frag">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\gbuffer\skybox_gbuffer.vert">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\gbuffer\ssao.frag">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\gbuffer\ssao.vert">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\gbuffer\ambient.frag">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\gbuffer\ambient.vert">
+      <Filter>Resource Files\gbuffer</Filter>
+    </None>
+    <None Include="resources\shaders\lights\object_depth.vert">
+      <Filter>Resource Files\lights</Filter>
+    </None>
+    <None Include="resources\shaders\lights\point_light.frag">
+      <Filter>Resource Files\lights</Filter>
+    </None>
+    <None Include="resources\shaders\lights\point_light.vert">
+      <Filter>Resource Files\lights</Filter>
+    </None>
+    <None Include="resources\shaders\lights\point_light_debug.frag">
+      <Filter>Resource Files\lights</Filter>
+    </None>
+    <None Include="resources\shaders\lights\point_light_debug.vert">
+      <Filter>Resource Files\lights</Filter>
+    </None>
+    <None Include="resources\shaders\lights\directional_light.frag">
+      <Filter>Resource Files\lights</Filter>
+    </None>
+    <None Include="resources\shaders\lights\directional_light.vert">
+      <Filter>Resource Files\lights</Filter>
+    </None>
+    <None Include="resources\shaders\lights\object_depth.frag">
+      <Filter>Resource Files\lights</Filter>
+    </None>
+    <None Include="resources\shaders\screens\boxblur.frag">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\boxblur.vert">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\boxblur_float.frag">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\boxblur_float.vert">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\final_screenquad.frag">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\final_screenquad.vert">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\fxaa.frag">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\fxaa.vert">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\screenquad.frag">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\screenquad.vert">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\tonemap.frag">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+    <None Include="resources\shaders\screens\tonemap.vert">
+      <Filter>Resource Files\screens</Filter>
+    </None>
+  </ItemGroup>
+</Project>
