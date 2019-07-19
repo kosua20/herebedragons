@@ -1,52 +1,23 @@
-## Steps
+# OpenGL version
 
-- Theoretical introduction
-- Technical introduction
-- General setup (glm, glew, glfw)
-- Main loop
-- Interactions
-- Programs and shaders compilation
-- Errors and tips, debugging
-- Rendering basic geometry
-- Simple shaders
-- Uniforms
+The OpenGL version is the initial reference version. It is based on the OpenGL 3 features set, with the programmable pipeline, and use glfw3 for accessing the windowing system, user inputs,... It should be compatible with macOS, Windows and Ubuntu.
 
-[Explanations stop here]
+The following features are implemented:
 
-- Textures
-- Attributes
-- Moving to 3D using matrix
-- Camera
-- Element arrays
-- Meshes loading
-- Lighting
-- Complex uniforms
-- Texture and Normal maps
-- Effect maps (specular, AO)
-- Cubemap : skybox
-- Environment mapping: specular, irradiance map
-- Gamma correction
-- Simple framebuffer
-- Shadow maps
-- Antialiasing
-- Distinct render and display resolutions
+- meshes and textures loading
+- Phong shading/ per-pixel lighting
+- Normal and specular mapping
+- Skybox
+- Environment cubemap for reflections
+- Keyboard-controlled camera
+- Variance shadow mapping
 - Parallax mapping
-- Variance shadow maps
-- Deferred shading
-- SSAO
- 
-[Code stops here]
+- FXAA anti-aliasing
+- Custom internal rendering resolution
 
-- HDR, bloom
-- Physically based rendering
-- Raymarching techniques (SSR ?)
-- UI elements, text rendering
-- Joystick support
-- Ressource catalogs
-- Temporal AA ?
-- Water/terrain/noise ?
-- Particles, instanced drawing
-- Geometry shaders ? TFb ?
-- Tessellation ?
+The program was part of a more general tutorial project, `GL_Template` which has since evolved and been replaced by [Rendu](https://github.com/kosua20/Rendu).
 
+![](images/opengl1.png)
+![](images/opengl2.png)
+![](images/opengl3.png)
 
