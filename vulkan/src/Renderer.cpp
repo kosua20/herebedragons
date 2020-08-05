@@ -94,7 +94,7 @@ Renderer::Renderer(Swapchain & swapchain, const int width, const int height) : _
 void Renderer::createPipelines(const VkRenderPass & finalRenderPass){
 	const int pushSize = (16 + 1) * 4;
 	PipelineUtilities::createPipeline(_device, "object", finalRenderPass, Object::descriptorSetLayout, _size[0], _size[1], false, VK_CULL_MODE_BACK_BIT, true, true, false, VK_COMPARE_OP_LESS, pushSize, _objectPipelineLayout, _objectPipeline);
-	PipelineUtilities::createPipeline(_device, "skybox", finalRenderPass, Skybox::descriptorSetLayout, _size[0], _size[1], false, VK_CULL_MODE_FRONT_BIT, true, false, false, VK_COMPARE_OP_EQUAL, pushSize, _skyboxPipelineLayout, _skyboxPipeline);
+	PipelineUtilities::createPipeline(_device, "skybox", finalRenderPass, Skybox::descriptorSetLayout, _size[0], _size[1], false, VK_CULL_MODE_FRONT_BIT, true, false, false, VK_COMPARE_OP_LESS_OR_EQUAL, pushSize, _skyboxPipelineLayout, _skyboxPipeline);
 }
 
 void Renderer::updateUniforms(const uint32_t index){
