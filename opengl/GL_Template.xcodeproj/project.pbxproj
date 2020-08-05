@@ -664,7 +664,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = /Developer/Graphics/GL_Template/;
+			buildWorkingDirectory = /Developer/graphics/HereBeDragons/opengl;
 			dependencies = (
 			);
 			name = GL_Template_make;
@@ -715,6 +715,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = F46160C81CF9D54F00B22823;
