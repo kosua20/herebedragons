@@ -265,7 +265,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ./resources/shaders/\nsh compile.sh";
+			shellScript = "cd ./resources/shaders/\nsh compile.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
