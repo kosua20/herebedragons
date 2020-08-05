@@ -1,5 +1,5 @@
 /gba/*.sav
-
+vulkan/*.dylib
 build/
 .DS_Store
 tools/
