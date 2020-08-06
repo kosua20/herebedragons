@@ -2,7 +2,7 @@
 
 > Hic sunt dracones.
 
-This repository contains multiple implementations of the same 3D scene, using different APIs and frameworks on various platforms. The goal is to provide a comparison between multiple rendering methods. This is inherently biased due to the variety of algorithms used and available CPU/GPU configurations, but can hopefully still provide interesting insights on 3D rendering.
+This repository contains multiple implementations of the same 3D scene, using different APIs and frameworks on various platforms. The goal is to provide a comparison between multiple rendering methods. This is inherently biased due to the variety of algorithms used and available CPU/GPU configurations, but can hopefully still provide interesting insights on 3D rendering. You can check a video of all current versions runnning [here (Youtube)](https://www.youtube.com/watch?v=Bbpu34S2bSI)
 
 ![](image.png)
 
