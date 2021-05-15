@@ -2,7 +2,7 @@
 
 ![](images/vectrex-1.png)
 
-This version is targeting the Vectrex console and its vector-based display. This relies on the [CMOC toolchain](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html) for compilation (setup detailed [here](https://vandenbran.de/post/2016-02-01-a-modern-toolchain-for-vectrex-development/)) and was tested in a fork of the [Vecx emulator](http://www.valavan.net/vectrex.html). For more technical details see this [write-up](http://blog.simonrodriguez.fr/articles/15-05-2021_3d_rendering_on_the_vectrex.html) on my blog.
+This version is targeting the Vectrex console and its vector-based display. This relies on the [CMOC toolchain](http://perso.b2b2c.ca/~sarrazip/dev/cmoc.html) for compilation (setup detailed [here](https://vandenbran.de/post/2016-02-01-a-modern-toolchain-for-vectrex-development/)) and was tested in a fork of the [Vecx emulator](http://www.valavan.net/vectrex.html). For more technical details see this [write-up](http://blog.simonrodriguez.fr/articles/15-05-2021__3d_rendering_on_the_vectrex.html) on my blog.
 
 ![](images/vectrex-2.png)
 
