@@ -20,12 +20,13 @@ The following versions are currently available:
 - [Nintendo Game Boy Advance](https://github.com/kosua20/herebedragons/tree/master/gba)
 - [PlayStation 2](https://github.com/kosua20/herebedragons/tree/master/ps2)  
 - [PICO-8](https://github.com/kosua20/herebedragons/tree/master/pico8) 
+- [Vectrex](https://github.com/kosua20/herebedragons/tree/master/vectrex) 
 
 The following versions are (tentatively) planned:
 
 - DirectX, OpenGL ES
 - other console hardwares
-- another raytracing
+- another raytracing approach
 
 In the directory of each version, one can find the source code, the corresponding resources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. The only exception is the OpenGL project, which is described below.
 
