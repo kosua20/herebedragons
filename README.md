@@ -21,6 +21,7 @@ The following versions are currently available:
 - [PlayStation 2](https://github.com/kosua20/herebedragons/tree/master/ps2)  
 - [PICO-8](https://github.com/kosua20/herebedragons/tree/master/pico8) 
 - [Vectrex](https://github.com/kosua20/herebedragons/tree/master/vectrex) 
+- [Glide](https://github.com/kosua20/herebedragons/tree/master/glide)
 
 The following versions are (tentatively) planned:
 
