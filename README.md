@@ -25,11 +25,11 @@ The following versions are currently available:
 
 The following versions are (tentatively) planned:
 
-- DirectX, OpenGL ES
+- DirectX (11 or 12), OpenGL ES
 - other console hardwares
 - another raytracing approach
 
-In the directory of each version, one can find the source code, the corresponding resources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. The only exception is the OpenGL project, which is described below.
+In the directory of each version, one can find the source code, the corresponding resources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. 
 
 ## Resources
 The scene is composed of four main elements:
