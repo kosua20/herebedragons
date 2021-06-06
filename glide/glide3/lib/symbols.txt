@@ -1,0 +1,133 @@
+export: `_grAADrawTriangle'
+export: `_grAlphaBlendFunction'
+export: `_grAlphaCombine'
+export: `_grAlphaControlsITRGBLighting'
+export: `_grAlphaTestFunction'
+export: `_grAlphaTestReferenceValue'
+export: `_grBufferClear'
+export: `_grBufferSwap'
+export: `_grCheckForRoom'
+export: `_grChromakeyMode'
+export: `_grChromakeyValue'
+export: `_grClipWindow'
+export: `_grColorCombine'
+export: `_grColorMask'
+export: `_grConstantColorValue'
+export: `_grCoordinateSpace'
+export: `_grCullMode'
+export: `_grDepthBiasLevel'
+export: `_grDepthBufferFunction'
+export: `_grDepthBufferMode'
+export: `_grDepthMask'
+export: `_grDepthRange'
+export: `_grDisable'
+export: `_grDisableAllEffects'
+export: `_grDitherMode'
+export: `_grDrawLine'
+export: `_grDrawPoint'
+export: `_grDrawTriangle'
+export: `_grDrawVertexArray'
+export: `_grDrawVertexArrayContiguous'
+export: `_grEnable'
+export: `_grErrorSetCallback'
+export: `_grFinish'
+export: `_grFlush'
+export: `_grFogColorValue'
+export: `_grFogMode'
+export: `_grFogTable'
+export: `_grGet'
+export: `_grGetProcAddress'
+export: `_grGetRegistryOrEnvironmentString'
+export: `_grGetString'
+export: `_grGlideGetState'
+export: `_grGlideGetVersion'
+export: `_grGlideGetVertexLayout'
+export: `_grGlideInit'
+export: `_grGlideSetState'
+export: `_grGlideSetVertexLayout'
+export: `_grGlideShutdown'
+export: `_grLfbConstantAlpha'
+export: `_grLfbConstantDepth'
+export: `_grLfbLock'
+export: `_grLfbReadRegion'
+export: `_grLfbUnlock'
+export: `_grLfbWriteColorFormat'
+export: `_grLfbWriteColorSwizzle'
+export: `_grLfbWriteRegion'
+export: `_grLoadGammaTable'
+export: `_grQueryResolutions'
+export: `_grRenderBuffer'
+export: `_grReset'
+export: `_grSelectContext'
+export: `_grSetNumPendingBuffers'
+export: `_grSplash'
+export: `_grSstOrigin'
+export: `_grSstSelect'
+export: `_grSstVidMode'
+export: `_grSstWinClose'
+export: `_grSstWinOpen'
+export: `_grTexCalcMemRequired'
+export: `_grTexClampMode'
+export: `_grTexCombine'
+export: `_grTexDetailControl'
+export: `_grTexDownloadMipMap'
+export: `_grTexDownloadMipMapLevel'
+export: `_grTexDownloadMipMapLevelPartial'
+export: `_grTexDownloadTable'
+export: `_grTexDownloadTableExt'
+export: `_grTexDownloadTablePartial'
+export: `_grTexFilterMode'
+export: `_grTexLodBiasValue'
+export: `_grTexMaxAddress'
+export: `_grTexMinAddress'
+export: `_grTexMipMapMode'
+export: `_grTexMultibase'
+export: `_grTexMultibaseAddress'
+export: `_grTexNCCTable'
+export: `_grTexSource'
+export: `_grTexTextureMemRequired'
+export: `_grTriStats'
+export: `_grVertexLayout'
+export: `_grViewport'
+export: `_gu3dfGetInfo'
+export: `_gu3dfLoad'
+export: `_guEncodeRLE16'
+export: `_guFogGenerateExp'
+export: `_guFogGenerateExp2'
+export: `_guFogGenerateLinear'
+export: `_guFogTableIndexToW'
+export: `_guGammaCorrectionRGB'
+i586-pc-msdosdjgpp-ld -X -S -r -o dxe_tmp.o -L /Users/simon/Developer/dos/djgpp/lib -T dxe.ld distate.o diget.o gstrip.o distrip.o diglide.o disst.o ditex.o g3df.o gaa.o gbanner.o gdraw.o gerror.o gglide.o glfb.o gpci.o gsplash.o gsst.o gtex.o gtexdl.o gu.o gxdraw.o ../../init/init.o ../../init/vgdrvr.o ../../init/vg96drvr.o ../../init/initvg/gamma.o ../../init/initvg/dac.o ../../init/initvg/video.o ../../init/initvg/parse.o ../../init/initvg/sli.o ../../init/initvg/util.o ../../init/initvg/info.o ../../init/initvg/print.o ../../init/initvg/gdebug.o ../../init/initvg/sst1init.o ../../../swlibs/newpci/pcilib/sst1_pci.o ../../../swlibs/newpci/pcilib/fxmsr.o ../../../swlibs/newpci/pcilib/fxpci.o ../../../swlibs/newpci/pcilib/fxdpmi2.o 
+unresolved: `___dj_stderr' (1 references)
+unresolved: `___dj_stdout' (7 references)
+unresolved: `___djgpp_base_address' (2 references)
+unresolved: `___djgpp_nearptr_disable' (1 references)
+unresolved: `___djgpp_nearptr_enable' (1 references)
+unresolved: `___dpmi_free_physical_address_mapping' (1 references)
+unresolved: `___dpmi_physical_address_mapping' (1 references)
+unresolved: `__crt0_startup_flags' (1 references)
+unresolved: `_atof' (4 references)
+unresolved: `_atoi' (49 references)
+unresolved: `_exit' (3 references)
+unresolved: `_fclose' (10 references)
+unresolved: `_fflush' (2 references)
+unresolved: `_fgetc' (1 references)
+unresolved: `_fgets' (1 references)
+unresolved: `_fopen' (6 references)
+unresolved: `_fprintf' (1 references)
+unresolved: `_fread' (2 references)
+unresolved: `_getc' (2 references)
+unresolved: `_getenv' (23 references)
+unresolved: `_malloc' (19 references)
+unresolved: `_memcpy' (2 references)
+unresolved: `_pow' (3 references)
+unresolved: `_printf' (1 references)
+unresolved: `_puts' (2 references)
+unresolved: `_sprintf' (7 references)
+unresolved: `_sscanf' (63 references)
+unresolved: `_strcat' (3 references)
+unresolved: `_strcmp' (3 references)
+unresolved: `_strcpy' (13 references)
+unresolved: `_strlen' (9 references)
+unresolved: `_strtok' (40 references)
+unresolved: `_vfprintf' (2 references)
