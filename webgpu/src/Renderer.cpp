@@ -68,11 +68,7 @@ Renderer::Renderer() {
 void Renderer::upload(WGPUDevice device, WGPUQueue queue, WGPUTextureFormat swapchainFormat){
 
 	// Compute uniform buffers strides.
-	WGPUSupportedLimits supportedLimits;
-	wgpuDeviceGetLimits(device, &supportedLimits);
-	WGPULimits limits = supportedLimits.limits;
-	const size_t alignmentConstraint = 256;//(std::max)(256u, limits.minUniformBufferOffsetAlignment ); bug on macOS?
-
+	const size_t alignmentConstraint = GPU::getUBOAlignment();
 	const size_t objectUBOSizeRatio = (sizeof(ModelInfos) + alignmentConstraint - 1) / alignmentConstraint;
 	const size_t objectUniformSize = objectUBOSizeRatio * alignmentConstraint;
 	const size_t frameUniformSize = sizeof(FrameInfos);

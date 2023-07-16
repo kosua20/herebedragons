@@ -8,7 +8,7 @@ struct Image;
 class GPU {
 public:
 
-	static void init(WGPUDevice device);
+	static void init(WGPUDevice device, size_t uboAlignment);
 
 	static void initBindGroupEntry(WGPUBindGroupEntry& entry);
 
@@ -28,8 +28,11 @@ public:
 
 	static void clean();
 
+	static size_t getUBOAlignment(){ return _uboAlignment; }
+
 private:
 
 	static WGPUComputePipeline _mipmapPipeline;
 	static WGPUShaderModule _mipmapModule;
+	static size_t _uboAlignment;
 };

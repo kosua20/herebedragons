@@ -5,8 +5,11 @@
 
 WGPUComputePipeline GPU::_mipmapPipeline = nullptr;
 WGPUShaderModule GPU::_mipmapModule = nullptr;
+size_t GPU::_uboAlignment = 0;
 
-void GPU::init(WGPUDevice device){
+void GPU::init(WGPUDevice device, size_t uboAlignment){
+	_uboAlignment = uboAlignment;
+	
 	// Prepare compute pipeline.
 	const std::string shaderContent = Resources::loadStringFromExternalFile("resources/shaders/mipmap.wgsl");
 

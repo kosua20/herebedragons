@@ -15,7 +15,7 @@ public:
 
 	~Renderer();
 
-	void upload(WGPUDevice device, WGPUQueue queue, WGPUTextureFormat swapchainForma);
+	void upload(WGPUDevice device, WGPUQueue queue, WGPUTextureFormat swapchainFormat);
 
 	void draw(WGPUQueue queue, WGPUCommandEncoder encoder, WGPUTextureView backbuffer);
 	

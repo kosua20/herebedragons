@@ -50,6 +50,41 @@ void requestAdapterCallback(WGPURequestAdapterStatus status, WGPUAdapter adapter
 	dst->complete = true;
 }
 
+void populateRequestLimits(const WGPULimits& referenceLimits, WGPULimits& targetLimits){
+	targetLimits.maxTextureDimension1D = 0;					// No 1D texture
+	targetLimits.maxTextureDimension2D = 4096;				// Max res in resources is 2048, support large rendertargets
+	targetLimits.maxTextureDimension3D = 0;					// No 3D texture
+	targetLimits.maxTextureArrayLayers = 6;					// Cubemap
+	targetLimits.maxBindGroups = 3;							// Uniforms, textures, static
+	targetLimits.maxBindGroupsPlusVertexBuffers = 4;		// + 1 interlaced vertex buffer
+	targetLimits.maxBindingsPerBindGroup = 3;				// 2 UBOs, up to 2 textures, 2 samplers + 1 shadowmap
+	targetLimits.maxDynamicUniformBuffersPerPipelineLayout = 1; // 1 dynamic UBO (per object data)
+	targetLimits.maxDynamicStorageBuffersPerPipelineLayout = 0; // No storage buffer.
+	targetLimits.maxSampledTexturesPerShaderStage = 3;		// 2 textures + shadowmap
+	targetLimits.maxSamplersPerShaderStage = 2;				// Linear and shadow samplers
+	targetLimits.maxStorageBuffersPerShaderStage = 0; 		// No storage buffers
+	targetLimits.maxStorageTexturesPerShaderStage = 1; 		// One storage texture (in mipmap.wgsl)
+	targetLimits.maxUniformBuffersPerShaderStage = 2; 		// 2 uniform buffers (frame and objects)
+	targetLimits.maxUniformBufferBindingSize = 2048; 		// Above 5 objects * ubo min alignment
+	targetLimits.maxStorageBufferBindingSize = 0; 			// No storage buffer
+	targetLimits.minUniformBufferOffsetAlignment = referenceLimits.minUniformBufferOffsetAlignment;
+	targetLimits.minStorageBufferOffsetAlignment = referenceLimits.minStorageBufferOffsetAlignment;
+	targetLimits.maxVertexBuffers = 1; 						// Interlaced attributes
+	targetLimits.maxBufferSize = 512000;					// Largest vertex buffer
+	targetLimits.maxVertexAttributes = 5; 					// Pos, normal, tangent, bitangent, uv
+	targetLimits.maxVertexBufferArrayStride = sizeof(Vertex); // Forced stride
+	targetLimits.maxInterStageShaderComponents = 22; 		// See object.wgsl
+	targetLimits.maxInterStageShaderVariables = 7; 			// Idem
+	targetLimits.maxColorAttachments = 1; 					// No MRT
+	targetLimits.maxColorAttachmentBytesPerSample = 4; 		// Draw to rgba8 swapchain.
+	targetLimits.maxComputeWorkgroupStorageSize = 0; 		// No local storage
+	targetLimits.maxComputeInvocationsPerWorkgroup = 64; 	// 8x8 in mipmap generation
+	targetLimits.maxComputeWorkgroupSizeX = 8; 				// See mipmap.wgsl
+	targetLimits.maxComputeWorkgroupSizeY = 8; 				// Idem
+	targetLimits.maxComputeWorkgroupSizeZ = 1; 				// Workload is 2D
+	targetLimits.maxComputeWorkgroupsPerDimension = 256; 	// 8x8 compute on a 2048 image to mipmap.
+}
+
 void requestDeviceCallback(WGPURequestDeviceStatus status, WGPUDevice device, char const* message, void* userdata){
 	AsyncResult<WGPUDevice>* dst = (AsyncResult<WGPUDevice>*)userdata;
 	if(status == WGPURequestDeviceStatus_Success){
@@ -141,6 +176,11 @@ int main(int argc, char** argv){
 	// Query the adapter limits.
 	WGPUSupportedLimits supportedLimits{};
 	wgpuAdapterGetLimits(adapter, &supportedLimits);
+	const size_t uboAlignment = supportedLimits.limits.minUniformBufferOffsetAlignment;
+	// Setup proper limits
+	WGPURequiredLimits requestedLimits{nullptr};
+	requestedLimits.nextInChain = nullptr;
+	populateRequestLimits(supportedLimits.limits, requestedLimits.limits);
 
 	/// Device
 	WGPUDeviceDescriptor deviceDesc{};
@@ -148,10 +188,7 @@ int main(int argc, char** argv){
 	deviceDesc.label = "Dragon device";
 	deviceDesc.requiredFeaturesCount = 0;
 	deviceDesc.requiredFeatures = nullptr;
-	// TODO: setup proper limits
-	WGPURequiredLimits requestedLimits{nullptr};
-	requestedLimits.nextInChain = nullptr;
-	requestedLimits.limits = supportedLimits.limits;
+
 	deviceDesc.requiredLimits = &requestedLimits;
 	deviceDesc.defaultQueue = {};
 	deviceDesc.defaultQueue.nextInChain = nullptr;
@@ -180,7 +217,7 @@ int main(int argc, char** argv){
 		std::cerr << "Could not retrieve WebGPU swapchain" << std::endl;
 		return -1;
 	}
-	GPU::init(device);
+	GPU::init(device, uboAlignment);
 
 	Input::manager().resizeEvent(width, height);
 
