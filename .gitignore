@@ -37,3 +37,4 @@ sysinfo.txt
 *.apk
 *.unitypackage
 pico8/ext/
+webgpu/build/

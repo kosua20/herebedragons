@@ -2,7 +2,7 @@
 
 > Hic sunt dracones.
 
-This repository contains multiple implementations of the same 3D scene, using different APIs and frameworks on various platforms. The goal is to provide a comparison between multiple rendering methods. This is inherently biased due to the variety of algorithms used and available CPU/GPU configurations, but can hopefully still provide interesting insights on 3D rendering. You can check a video of all current versions runnning [here (Youtube)](https://www.youtube.com/watch?v=Bbpu34S2bSI)
+This repository contains multiple implementations of the same 3D scene, using different APIs and frameworks on various platforms. The goal is to provide a comparison between multiple rendering methods. This is inherently biased due to the variety of algorithms used and available CPU/GPU configurations, but can hopefully still provide interesting insights on 3D rendering. You can check a video of most versions runnning [here (Youtube)](https://www.youtube.com/watch?v=Bbpu34S2bSI)
 
 ![](image.png)
 
@@ -11,6 +11,7 @@ The following versions are currently available:
 - [OpenGL](https://github.com/kosua20/herebedragons/tree/master/opengl)
 - [WebGL](https://github.com/kosua20/herebedragons/tree/master/webgl) 
 - [Vulkan](https://github.com/kosua20/herebedragons/tree/master/vulkan) 
+- [WebGPU](https://github.com/kosua20/herebedragons/tree/master/webgpu)
 - [Metal](https://github.com/kosua20/herebedragons/tree/master/metal)
 - [SceneKit](https://github.com/kosua20/herebedragons/tree/master/scenekit)
 - [Unity](https://github.com/kosua20/herebedragons/tree/master/unity)
@@ -25,11 +26,12 @@ The following versions are currently available:
 
 The following versions are (tentatively) planned:
 
-- DirectX (11 or 12), OpenGL ES
+- DirectX (12, and 9 or 11), OpenGL ES
 - other console hardwares
+- other engines
 - another raytracing approach
 
-In the directory of each version, one can find the source code, the corresponding resources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. 
+In the directory of each version, you can find the source code, the corresponding resources (as each method has its own format/quality constraints), along with a readme describing the method and a few examples. 
 
 ## Resources
 The scene is composed of four main elements:
