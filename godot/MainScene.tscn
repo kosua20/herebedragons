@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cha2omcbh6pi4"]
+[gd_scene load_steps=29 format=3 uid="uid://cha2omcbh6pi4"]
 
 [ext_resource type="Texture2D" uid="uid://yovxb1mxvwmk" path="res://resources/textures/dragon_texture_color.png" id="1_6hkjo"]
 [ext_resource type="ArrayMesh" uid="uid://sqdugvxymc0n" path="res://resources/meshes/dragon.obj" id="1_7pvs7"]
@@ -13,8 +13,10 @@
 [ext_resource type="Texture2D" uid="uid://derk88dcf0vyi" path="res://resources/textures/plane_texture_depthmap.png" id="10_0katw"]
 [ext_resource type="Texture2D" uid="uid://b7poumgjx5puh" path="res://resources/textures/plane_texture_normal.png" id="11_4si2j"]
 [ext_resource type="Texture2D" uid="uid://bnamff3ht2xyt" path="res://resources/textures/cubemap.png" id="13_rje4p"]
+[ext_resource type="Script" path="res://CameraControls.gd" id="14_p7vtw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nfp1d"]
+resource_name = "DragonMaterial"
 albedo_texture = ExtResource("1_6hkjo")
 metallic = 1.0
 metallic_texture = ExtResource("2_l7iff")
@@ -26,6 +28,7 @@ ao_enabled = true
 ao_texture = ExtResource("2_l7iff")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vt0qn"]
+resource_name = "MonkeyMaterial"
 albedo_texture = ExtResource("2_3lltd")
 metallic = 1.0
 metallic_texture = ExtResource("3_k2ll0")
@@ -39,7 +42,49 @@ ao_texture_channel = 2
 grow_amount = -1.62
 proximity_fade_distance = 0.0
 
+[sub_resource type="Animation" id="Animation_eq6y7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_doil2"]
+resource_name = "monkey_anim"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 1.5708, 0), Vector3(0, 3.14159, 0), Vector3(0, 4.71239, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a44li"]
+_data = {
+"RESET": SubResource("Animation_eq6y7"),
+"monkey_anim": SubResource("Animation_doil2")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_k63gh"]
+animation = &"monkey_anim"
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_knosd"]
+resource_name = "PlaneMaterial"
 albedo_texture = ExtResource("9_66n4e")
 roughness = 0.4
 normal_enabled = true
@@ -50,6 +95,71 @@ heightmap_deep_parallax = true
 heightmap_min_layers = 8
 heightmap_max_layers = 32
 heightmap_texture = ExtResource("10_0katw")
+
+[sub_resource type="Animation" id="Animation_l2bfc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(3.90685, 5.36211, 3.78462)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.699973, 1.01213, -0.0483611)]
+}
+
+[sub_resource type="Animation" id="Animation_5m06c"]
+resource_name = "light_animation"
+length = 6.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(3.90685, 5.36211, 3.78462), Vector3(3.907, 1.932, 3.785)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(-0.699973, 1.01213, -0.0483611), Vector3(-0.0600253, 0.983182, -0.0370501)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5ntn5"]
+_data = {
+"RESET": SubResource("Animation_l2bfc"),
+"light_animation": SubResource("Animation_5m06c")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_h7d40"]
+animation = &"light_animation"
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_s8f2g"]
 panorama = ExtResource("13_rje4p")
@@ -73,16 +183,36 @@ transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 1.43952, 1.29871, 1.616
 material_override = SubResource("StandardMaterial3D_vt0qn")
 mesh = ExtResource("2_ypgan")
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Monkey"]
+libraries = {
+"": SubResource("AnimationLibrary_a44li")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="Monkey"]
+tree_root = SubResource("AnimationNodeAnimation_k63gh")
+anim_player = NodePath("../AnimationPlayer")
+active = true
+
 [node name="Plane" type="MeshInstance3D" parent="."]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+transform = Transform3D(5.5, 0, 0, 0, 5.5, 0, 0, 0, 5.5, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_knosd")
 mesh = ExtResource("3_ihtgn")
 skeleton = NodePath("../Monkey")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.555846, -0.519991, 0.648571, -0.036975, 0.763965, 0.644198, -0.830463, -0.382056, 0.40542, 3.90685, 5.36211, 3.78462)
-light_color = Color(1, 0.898039, 0.796078, 1)
+transform = Transform3D(0.555843, -0.519992, 0.648572, -0.036975, 0.763965, 0.644197, -0.830465, -0.382053, 0.405418, 3.90685, 5.36211, 3.78462)
+light_color = Color(1, 0.952941, 0.905882, 1)
 shadow_enabled = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DirectionalLight3D"]
+libraries = {
+"": SubResource("AnimationLibrary_5ntn5")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="DirectionalLight3D"]
+tree_root = SubResource("AnimationNodeAnimation_h7d40")
+anim_player = NodePath("../AnimationPlayer")
+active = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_rmrb7")
@@ -90,3 +220,7 @@ environment = SubResource("Environment_rmrb7")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.230253, 1.56962, 5.47025)
 current = true
+script = ExtResource("14_p7vtw")
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.03506, 0.976565)
