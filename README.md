@@ -14,6 +14,7 @@ The following versions are currently available:
 - [WebGPU](https://github.com/kosua20/herebedragons/tree/master/webgpu)
 - [Metal](https://github.com/kosua20/herebedragons/tree/master/metal)
 - [SceneKit](https://github.com/kosua20/herebedragons/tree/master/scenekit)
+- [Godot](https://github.com/kosua20/herebedragons/tree/master/godot)
 - [Unity](https://github.com/kosua20/herebedragons/tree/master/unity)
 - [Blender Cycles](https://github.com/kosua20/herebedragons/tree/master/cycles)
 - [Ptah](https://github.com/kosua20/herebedragons/tree/master/ptah) (a custom real-time renderer, see [the Github page](https://github.com/kosua20/PtahRenderer/))
