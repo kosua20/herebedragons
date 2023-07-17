@@ -1,0 +1,92 @@
+[gd_scene load_steps=20 format=3 uid="uid://cha2omcbh6pi4"]
+
+[ext_resource type="Texture2D" uid="uid://yovxb1mxvwmk" path="res://resources/textures/dragon_texture_color.png" id="1_6hkjo"]
+[ext_resource type="ArrayMesh" uid="uid://sqdugvxymc0n" path="res://resources/meshes/dragon.obj" id="1_7pvs7"]
+[ext_resource type="Texture2D" uid="uid://cw1u1abcqn7el" path="res://resources/textures/suzanne_texture_color.png" id="2_3lltd"]
+[ext_resource type="Texture2D" uid="uid://dx5js8hobx2tu" path="res://resources/textures/dragon_texture_rough_met_ao.png" id="2_l7iff"]
+[ext_resource type="ArrayMesh" uid="uid://bdbtmymyiaesm" path="res://resources/meshes/suzanne.obj" id="2_ypgan"]
+[ext_resource type="Texture2D" uid="uid://jka5pmmxdvbx" path="res://resources/textures/suzanne_texture_normal.png" id="3_gmwqm"]
+[ext_resource type="ArrayMesh" uid="uid://bkv0sbuptl7s8" path="res://resources/meshes/plane.obj" id="3_ihtgn"]
+[ext_resource type="Texture2D" uid="uid://cl2l322t8du0t" path="res://resources/textures/suzanne_texture_rough_met_ao.png" id="3_k2ll0"]
+[ext_resource type="Texture2D" uid="uid://c7rihebldaa53" path="res://resources/textures/dragon_texture_normal.png" id="3_x1767"]
+[ext_resource type="Texture2D" uid="uid://c66yaxr4o4att" path="res://resources/textures/plane_texture_color.png" id="9_66n4e"]
+[ext_resource type="Texture2D" uid="uid://derk88dcf0vyi" path="res://resources/textures/plane_texture_depthmap.png" id="10_0katw"]
+[ext_resource type="Texture2D" uid="uid://b7poumgjx5puh" path="res://resources/textures/plane_texture_normal.png" id="11_4si2j"]
+[ext_resource type="Texture2D" uid="uid://bnamff3ht2xyt" path="res://resources/textures/cubemap.png" id="13_rje4p"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nfp1d"]
+albedo_texture = ExtResource("1_6hkjo")
+metallic = 1.0
+metallic_texture = ExtResource("2_l7iff")
+metallic_texture_channel = 1
+roughness_texture = ExtResource("2_l7iff")
+normal_enabled = true
+normal_texture = ExtResource("3_x1767")
+ao_enabled = true
+ao_texture = ExtResource("2_l7iff")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vt0qn"]
+albedo_texture = ExtResource("2_3lltd")
+metallic = 1.0
+metallic_texture = ExtResource("3_k2ll0")
+metallic_texture_channel = 1
+roughness_texture = ExtResource("3_k2ll0")
+normal_enabled = true
+normal_texture = ExtResource("3_gmwqm")
+ao_enabled = true
+ao_texture = ExtResource("3_k2ll0")
+ao_texture_channel = 2
+grow_amount = -1.62
+proximity_fade_distance = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_knosd"]
+albedo_texture = ExtResource("9_66n4e")
+roughness = 0.4
+normal_enabled = true
+normal_texture = ExtResource("11_4si2j")
+heightmap_enabled = true
+heightmap_scale = 8.0
+heightmap_deep_parallax = true
+heightmap_min_layers = 8
+heightmap_max_layers = 32
+heightmap_texture = ExtResource("10_0katw")
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_s8f2g"]
+panorama = ExtResource("13_rje4p")
+
+[sub_resource type="Sky" id="Sky_epfy5"]
+sky_material = SubResource("PanoramaSkyMaterial_s8f2g")
+
+[sub_resource type="Environment" id="Environment_rmrb7"]
+background_mode = 2
+sky = SubResource("Sky_epfy5")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Dragon" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.56676, 1.41668, -0.11697)
+material_override = SubResource("StandardMaterial3D_nfp1d")
+mesh = ExtResource("1_7pvs7")
+
+[node name="Monkey" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 1.43952, 1.29871, 1.61652)
+material_override = SubResource("StandardMaterial3D_vt0qn")
+mesh = ExtResource("2_ypgan")
+
+[node name="Plane" type="MeshInstance3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_knosd")
+mesh = ExtResource("3_ihtgn")
+skeleton = NodePath("../Monkey")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.555846, -0.519991, 0.648571, -0.036975, 0.763965, 0.644198, -0.830463, -0.382056, 0.40542, 3.90685, 5.36211, 3.78462)
+light_color = Color(1, 0.898039, 0.796078, 1)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_rmrb7")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.230253, 1.56962, 5.47025)
+current = true
