@@ -73,7 +73,6 @@ void Resources::loadImage(const std::string & path, Image& image, bool flip){
 	image.c = (unsigned int)localChannels;
 	image.data = std::vector<unsigned char>(data, data + image.w * image.h * image.c);
 	STBI_FREE(data);
-	return 0;
 }
 
 

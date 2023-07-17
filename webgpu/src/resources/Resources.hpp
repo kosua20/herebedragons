@@ -16,9 +16,9 @@ struct Mesh {
 
 struct Image {
 	std::vector<unsigned char> data;
-	uint w;
-	uint h;
-	uint c;
+	unsigned int w;
+	unsigned int h;
+	unsigned int c;
 };
 
 class Resources {
