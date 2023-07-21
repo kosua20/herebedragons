@@ -2,9 +2,9 @@
 
 ![](images/unity1.png)
 
-The Unity version was entirely created inside Unity itself, for assets placement, materials configuration, light placement,... The only custom code required was for the camera: Unity provides a camera rotating around a pivot, but with no way to move the camera closer or farther from the pivot, within a range of values.
+The Unity version was entirely created inside Unityitself (the 2022 LTS version), for assets placement, materials configuration, lighting and animations,... The only code required was for the camera: Unity provides a script to handle a camera rotating around a pivot, with minor tweaks.
 
-The default Unity material parameters are now designed for a physically-based rendering setup, so the additional effects map for each object was tweaked to obtain approximate specular maps. Also, Unity provides a parallax mapping material, here applied on the ground.
+This uses the recent high quality rendering pipeline (HDRP) with PBR materials, so the additional effects maps for each object have been adjusted to provide the required physical parameters. Also, Unity provides a parallax mapping effect, here applied on the ground material. A reflection probe is placed in the level and updated at launch, along with baked light probes.
 
 ![](images/unity2.png)
 *In the Unity editor.*
