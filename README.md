@@ -26,10 +26,11 @@ The following versions are currently available:
 - [Vectrex](https://github.com/kosua20/herebedragons/tree/master/vectrex) 
 - [Glide](https://github.com/kosua20/herebedragons/tree/master/glide)
 - [DX9](https://github.com/kosua20/herebedragons/tree/master/dx9)
+- [DX11](https://github.com/kosua20/herebedragons/tree/master/dx11)
 
 The following versions are (tentatively) planned:
 
-- DirectX (11 and 12), OpenGL ES
+- DirectX 12, OpenGL ES
 - other console hardwares
 - other engines
 - another raytracing approach
