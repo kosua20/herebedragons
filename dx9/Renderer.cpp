@@ -233,7 +233,7 @@ Renderer::Renderer( HWND window )
 
 	// Light init
 	_worldLightDir = XMVector3Normalize(XMVectorSet(1.0f, 0.6f, 1.0f, 0.0f));
-	_lightView = XMMatrixLookAtRH(2.f * _worldLightDir, XMVectorZero(), XMVectorSet(0.f, 1.0f, 0.f, 0.f));
+	_lightView = XMMatrixLookAtRH(5.f * _worldLightDir, XMVectorZero(), XMVectorSet(0.f, 1.0f, 0.f, 0.f));
 	_lightProj = XMMatrixOrthographicRH(10.f, 10.f, 0.1f, 10.f); // This will never change
 	
 	
@@ -339,7 +339,7 @@ void Renderer::update(const MouseState& mouse, double time, double deltaTime) {
 
 	_proj = XMMatrixPerspectiveFovRH( 60.f * ( float )M_PI / 180.f, float( _w ) / float( _h ), 0.1f, 1000.0f );
 
-	_lightView = XMMatrixLookAtRH(2.f * _worldLightDir, XMVectorZero(), XMVectorSet(0.f, 1.0f, 0.f, 0.f));
+	_lightView = XMMatrixLookAtRH(5.f * _worldLightDir, XMVectorZero(), XMVectorSet(0.f, 1.0f, 0.f, 0.f));
 	
 	float monkeyAngle = float(fmod(time, 2 * M_PI));
 	_objects[1].model = XMMatrixScaling(0.65f, 0.65f, 0.65f) * XMMatrixRotationAxis(XMVectorSet(0.f, 1.0f, 0.f, 0.f), monkeyAngle) * XMMatrixTranslation(0.5f, 0.0f, 0.5f); 
