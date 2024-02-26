@@ -27,10 +27,11 @@ The following versions are currently available:
 - [Glide](https://github.com/kosua20/herebedragons/tree/master/glide)
 - [DX9](https://github.com/kosua20/herebedragons/tree/master/dx9)
 - [DX11](https://github.com/kosua20/herebedragons/tree/master/dx11)
+- [DX12](https://github.com/kosua20/herebedragons/tree/master/dx12)
 
 The following versions are (tentatively) planned:
 
-- DirectX 12, OpenGL ES
+- OpenGL ES
 - other console hardwares
 - other engines
 - another raytracing approach
@@ -45,8 +46,9 @@ The scene is composed of four main elements:
 - a monkey head ('Suzanne') rotating around its vertical axis.
 - a skybox surrounding the scene, textured with a cloudy sky.
 
-Additionally, the sun is simulated by using a directional light, and the camera should be able to rotate around the scene.
+Additionally, the sun is simulated by using a directional light, and the camera should be able to rotate around the scene. Note that some versions might provide additional effects, such as soft shadow maps, parallax mapping or screen space ambient occlusion.
 The initial 3D models and textures are contained in the `opengl/resources` [directory](https://github.com/kosua20/herebedragons/tree/master/opengl/resources).
+
 
 ## Other implementations
 Here you can find implementations using some of the above APIs combined with other programming languages, submitted by awesome people!
