@@ -105,6 +105,9 @@ private:
 	//Shadow map resource and views
 	ID3D12Resource* _shadowMapDepth{nullptr};
 	D3D12_CPU_DESCRIPTOR_HANDLE _shadowMapDepthRT{0};
+	ID3D12Resource* _shadowMap{nullptr};
+	D3D12_CPU_DESCRIPTOR_HANDLE _shadowMapRT{0};
+	ID3D12Resource* _shadowMapBlur{nullptr};
 
 	//// Global constant buffer
 	ID3D12Resource* _constantBuffers[FRAME_COUNT];
@@ -112,10 +115,12 @@ private:
 	//// Shaders and layout for lit/unlit/shadow
 	Pipeline _lit;
 	Pipeline _unlit;
-	Pipeline _shadow;;
+	Pipeline _shadow;
+	Pipeline _blur;
 
-	D3D12_CPU_DESCRIPTOR_HANDLE _texturesTable;
-	D3D12_GPU_DESCRIPTOR_HANDLE _texturesTableGpu;
+	D3D12_CPU_DESCRIPTOR_HANDLE _texturesTables;
+	D3D12_GPU_DESCRIPTOR_HANDLE _texturesDrawTableGpu;
+	D3D12_GPU_DESCRIPTOR_HANDLE _texturesBlurTableGpu;
 	
 	D3D12_CPU_DESCRIPTOR_HANDLE _samplersTable;
 	D3D12_GPU_DESCRIPTOR_HANDLE _samplersTableGpu;

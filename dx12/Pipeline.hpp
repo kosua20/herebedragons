@@ -19,7 +19,7 @@ public:
 
 		Resource resources{ NONE };
 		unsigned int resourcesCount{ 0 };
-		bool pixel{ false };
+		DXGI_FORMAT rtFormat{ DXGI_FORMAT_UNKNOWN };
 		bool fullLayout{ false };
 	};
 	

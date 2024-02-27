@@ -85,7 +85,13 @@
     <FxCompile Include="shaders\ShadowVertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="shaders\ShadowPixelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
     <FxCompile Include="shaders\MipmapComputeShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\BlurComputeShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

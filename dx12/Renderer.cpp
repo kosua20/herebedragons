@@ -294,39 +294,45 @@ Renderer::Renderer( HWND window )
 	dxgiFactory->Release();
 
 	// Shared resource tables
+	D3D12_CPU_DESCRIPTOR_HANDLE texturesDrawTable{0};
+	D3D12_CPU_DESCRIPTOR_HANDLE texturesBlurTable{0};
 	{
-		_texturesTable = _descriptorAllocator.allocate( D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
-		_texturesTableGpu = _descriptorAllocator.convert( D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _texturesTable);
+		_texturesTables = _descriptorAllocator.allocate( D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 3);
+		texturesDrawTable = _texturesTables;
+		texturesBlurTable = _descriptorAllocator.next(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _texturesTables);
+
+		_texturesDrawTableGpu = _descriptorAllocator.convert( D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, texturesDrawTable);
+		_texturesBlurTableGpu = _descriptorAllocator.convert( D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, texturesBlurTable);
+
 		_samplersTable = _descriptorAllocator.allocate( D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 2);
 		_samplersTableGpu = _descriptorAllocator.convert( D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, _samplersTable);
 	}
 
 	// Shadowmap
 	{
-		_shadowMapDepth = GPU::createTexture(_device, DXGI_FORMAT_R32_TYPELESS, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 1, 1, D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
-
-		D3D12_DEPTH_STENCIL_VIEW_DESC viewDesc{};
-		viewDesc.Format = DXGI_FORMAT_D32_FLOAT;
-		viewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-		viewDesc.Flags = D3D12_DSV_FLAG_NONE;
-		viewDesc.Texture2D.MipSlice = 0;
+		_shadowMapDepth = GPU::createTexture(_device, DXGI_FORMAT_D32_FLOAT, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 1, 1, D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
 		_shadowMapDepthRT = _descriptorAllocator.allocate( D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
+		_device->CreateDepthStencilView( _shadowMapDepth, nullptr, _shadowMapDepthRT );
 
-		_device->CreateDepthStencilView( _shadowMapDepth, &viewDesc, _shadowMapDepthRT );
+		_shadowMap = GPU::createTexture(_device, DXGI_FORMAT_R32G32_FLOAT, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 1, 1, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+		_shadowMapRT = _descriptorAllocator.allocate( D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 1);
+		_device->CreateRenderTargetView( _shadowMap, nullptr, _shadowMapRT );
 
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
-		srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.Texture2D.MostDetailedMip = 0;
-		srvDesc.Texture2D.MipLevels = 1;
-		srvDesc.Texture2D.PlaneSlice = 0;
-		srvDesc.Texture2D.ResourceMinLODClamp = 0;
+		_shadowMapBlur = GPU::createTexture(_device, DXGI_FORMAT_R32G32_FLOAT, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 1, 1, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS);
+		
+		// Directly place the shadow maps in the shared texture resource table.
+		// In order: final SRV, intermediate SRV, final UAV
+		// That way we can use the resource table for both shaders.
+		D3D12_CPU_DESCRIPTOR_HANDLE shadowMapBlur = texturesDrawTable;
+		_device->CreateShaderResourceView( _shadowMapBlur, nullptr, shadowMapBlur);
 
-		// Directly place the shadow map in the shared texture resource table.
-		D3D12_CPU_DESCRIPTOR_HANDLE shadowMap = _texturesTable;
-		_device->CreateShaderResourceView( _shadowMapDepth, &srvDesc, shadowMap);
+		D3D12_CPU_DESCRIPTOR_HANDLE shadowMapSrc = texturesBlurTable;
+		_device->CreateShaderResourceView( _shadowMap, nullptr, shadowMapSrc);
+
+		D3D12_CPU_DESCRIPTOR_HANDLE shadowMapBlurUav = _descriptorAllocator.next(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, shadowMapSrc);
+		_device->CreateUnorderedAccessView( _shadowMapBlur, nullptr, nullptr, shadowMapBlurUav);
+
 	}
 
 
@@ -359,22 +365,24 @@ Renderer::Renderer( HWND window )
 	{
 		Pipeline::Settings settings;
 		settings.fullLayout = true;
-		settings.pixel = true;
+		settings.rtFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		settings.resources = Pipeline::Settings::ALL;
 		settings.resourcesCount = 2;
 		_lit.configureGraphics("resources/shaders/Lit", settings, _device);
 
 		settings.fullLayout = false;
-		settings.pixel = true;
+		settings.rtFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		settings.resources = Pipeline::Settings::OBJECT_CBV | Pipeline::Settings::OBJECT_TABLE;
 		settings.resourcesCount = 1;
 		_unlit.configureGraphics("resources/shaders/Unlit", settings, _device);
 
 		settings.fullLayout = false;
-		settings.pixel = false;
+		settings.rtFormat = DXGI_FORMAT_R32G32_FLOAT;
 		settings.resources = Pipeline::Settings::OBJECT_CBV;
 		settings.resourcesCount = 0;
 		_shadow.configureGraphics("resources/shaders/Shadow", settings, _device);
+
+		_blur.configureCompute("resources/shaders/Blur", _device);
 
 	}
 	
@@ -422,8 +430,6 @@ Renderer::~Renderer()
 	flush();
 
 	// Cleanup everything.
-	
-
 	for( ShadedObject& obj : _objects )
 	{
 		obj.diffuseTexture->Release();
@@ -442,8 +448,12 @@ Renderer::~Renderer()
 	_unlit.signature->Release();
 	_shadow.pipeline->Release();
 	_shadow.signature->Release();
+	_blur.pipeline->Release();
+	_blur.signature->Release();
 
 	_shadowMapDepth->Release();
+	_shadowMap->Release();
+	_shadowMapBlur->Release();
 	_depthBuffer->Release();
 
 	_fence->Release();
@@ -630,11 +640,13 @@ bool Renderer::draw()
 	_commandList->SetDescriptorHeaps(2, _descriptorAllocator.getGpuHeaps());
 
 	// Shadow map pass (assume in depth write state by default).
-	{
+	{		
+		const float clearColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		_commandList->ClearDepthStencilView(_shadowMapDepthRT, D3D12_CLEAR_FLAG_DEPTH, 1.0, 0, 0, nullptr);
+		_commandList->ClearRenderTargetView(_shadowMapRT, clearColor, 0, nullptr);
 		_commandList->RSSetViewports(1, &shadowViewport);
 		_commandList->RSSetScissorRects(1, &shadowScissor);
-		_commandList->OMSetRenderTargets(0, nullptr, FALSE, &_shadowMapDepthRT);
+		_commandList->OMSetRenderTargets(1, &_shadowMapRT, FALSE, &_shadowMapDepthRT);
 		
 		_commandList->SetGraphicsRootSignature(_shadow.signature);
 		_commandList->SetPipelineState(_shadow.pipeline);
@@ -652,13 +664,26 @@ bool Renderer::draw()
 		}
 	}
 
+	// Blur shadow map
+	{
+		GPU::transitionResource(_commandList, _shadowMap, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+		GPU::transitionResource(_commandList, _shadowMapBlur, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+		_commandList->SetComputeRootSignature(_blur.signature);
+		_commandList->SetPipelineState(_blur.pipeline);
+		_commandList->SetComputeRootDescriptorTable(0, _texturesBlurTableGpu);
+		const UINT gx = (SHADOW_MAP_SIZE + 7) / 8;
+		const UINT gy = (SHADOW_MAP_SIZE + 7) / 8;
+		_commandList->Dispatch(gx, gy, 1);
+		GPU::transitionResource(_commandList, _shadowMap, D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
+		GPU::transitionResource(_commandList, _shadowMapBlur, D3D12_RESOURCE_STATE_UNORDERED_ACCESS, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	}
+
 
 	// Fetch the current backbuffer and transition it.
 	_currentBackbuffer = _swapchain->GetCurrentBackBufferIndex();
 	GPU::transitionResource(_commandList, _backbuffers[ _currentBackbuffer ], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	// We'll use the shadow map as resource in pixel shader
-	GPU::transitionResource(_commandList, _shadowMapDepth, D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
+	
 	// Main pass
 	{
 		// Clear rendertargets
@@ -675,7 +700,7 @@ bool Renderer::draw()
 
 		// Root signature: object CB, object RT, engine CB, engine RT, samplers RT
 		_commandList->SetGraphicsRootConstantBufferView(2, constantBuffer->GetGPUVirtualAddress() + frameCbOffset);
-		_commandList->SetGraphicsRootDescriptorTable(3, _texturesTableGpu);
+		_commandList->SetGraphicsRootDescriptorTable(3, _texturesDrawTableGpu);
 		_commandList->SetGraphicsRootDescriptorTable(4, _samplersTableGpu);
 
 		int i = 0;
@@ -702,8 +727,7 @@ bool Renderer::draw()
 
 	// Restore backbuffer and shadowmap to their default states. 
 	GPU::transitionResource(_commandList, _backbuffers[ _currentBackbuffer ], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-	GPU::transitionResource(_commandList, _shadowMapDepth, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_DEPTH_WRITE);
-
+	
 	DX_RET( _commandList->Close() );
 
 	ID3D12CommandList* commandLists[] = { _commandList };

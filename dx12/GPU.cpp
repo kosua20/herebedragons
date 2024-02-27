@@ -119,6 +119,15 @@ ID3D12Resource* GPU::createTexture(ID3D12Device* device, DXGI_FORMAT format, UIN
 		clearValue.DepthStencil.Stencil = 0;
 		activeClearValue = &clearValue;
 	}
+	if( flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET )
+	{
+		clearValue.Format = format;
+		clearValue.Color[ 0 ] = 1.0f;
+		clearValue.Color[ 1 ] = 1.0f;
+		clearValue.Color[ 2 ] = 1.0f;
+		clearValue.Color[ 3 ] = 1.0f;
+		activeClearValue = &clearValue;
+	}
 
 	ID3D12Resource* texture{nullptr};
 	DX_RET(device->CreateCommittedResource(&heapDesc, D3D12_HEAP_FLAG_NONE, &rscDesc, initialState, activeClearValue, IID_PPV_ARGS(&texture)));

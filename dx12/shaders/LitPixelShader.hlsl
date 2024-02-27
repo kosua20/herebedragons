@@ -29,18 +29,30 @@ Texture2D shadowMap : register(t2);
 SamplerState objectSampler: register(s0);
 SamplerState shadowSampler: register(s1);
 
-float estimateShadowing(float4 lightSpacePos) {
+float estimateShadowingVSM(float4 lightSpacePos) {
 	float3 lightSpaceNdc = lightSpacePos.xyz / lightSpacePos.w;
-	float2 shadowUV = lightSpaceNdc.xy * 0.5 + 0.5;
-	shadowUV.y = 1.0 - shadowUV.y;
-
-	// Sample depth
-	float lightDepth = shadowMap.Sample(shadowSampler, shadowUV).r;
 	if (any(abs(lightSpaceNdc) > 1.f)) {
 		return 1.f;
 	}
-	const float bias = 0.005f;
-	return (lightSpaceNdc.z <= lightDepth + bias) ? 1.f : 0.f;
+
+	float2 shadowUV = lightSpaceNdc.xy * 0.5 + 0.5;
+	shadowUV.y = 1.0 - shadowUV.y;
+	// Read first and second moment from shadow map.
+	float2 moments = shadowMap.Sample(shadowSampler, shadowUV).rg;
+
+	// Initial probability of light.
+	float probability = float(lightSpacePos.z <= moments.x);
+	// Compute variance.
+	float variance = moments.y - (moments.x * moments.x);
+	variance = max(variance, 0.00008f);
+	// Delta of depth.
+	float d = lightSpacePos.z - moments.x;
+	// Use Chebyshev to estimate bound on probability.
+	float probabilityMax = variance / (variance + d*d);
+	probabilityMax = max(probability, probabilityMax);
+	// Limit light bleeding by rescaling and clamping the probability factor.
+	probabilityMax = clamp( (probabilityMax - 0.1) / (1.0 - 0.1), 0.0, 1.0);
+	return probabilityMax;
 }
 
 float4 main(VertexOut vOut) : SV_TARGET
@@ -54,7 +66,7 @@ float4 main(VertexOut vOut) : SV_TARGET
 	
 	float3 l = normalize(lightDirViewSpace.xyz);
 
-	float shadowFactor = estimateShadowing(vOut.lightPos);
+	float shadowFactor = estimateShadowingVSM(vOut.lightPos);
 	
 	// Phong lighting.
 	// Ambient term.

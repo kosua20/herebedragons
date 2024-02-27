@@ -5,11 +5,13 @@
 
 void Pipeline::configureGraphics(const std::string& name, const Settings& settings, ID3D12Device* device)
 {
+	const bool needsPixelShader = settings.rtFormat != DXGI_FORMAT_UNKNOWN;
+
 	size_t vertexShaderSize = 0;
-	char* vertexShaderData = Resources::loadRawDataFromExternalFile(name + "VertexShader.cso", vertexShaderSize);
+	char* vertexShaderData = Resources::loadRawDataFromExternalFile( name + "VertexShader.cso", vertexShaderSize );
 	size_t pixelShaderSize = 0;
 	char* pixelShaderData = nullptr;
-	if (settings.pixel) {
+	if ( needsPixelShader ) {
 		pixelShaderData = Resources::loadRawDataFromExternalFile(name + "PixelShader.cso", pixelShaderSize);
 	}
 
@@ -18,7 +20,7 @@ void Pipeline::configureGraphics(const std::string& name, const Settings& settin
 		rootDesc.Flags = (D3D12_ROOT_SIGNATURE_FLAGS)(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT
 			| D3D12_ROOT_SIGNATURE_FLAG_DENY_AMPLIFICATION_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS
 			| D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS
-			| (settings.pixel ? 0 : D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS) | D3D12_ROOT_SIGNATURE_FLAG_DENY_MESH_SHADER_ROOT_ACCESS);
+			| ( needsPixelShader ? 0 : D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS) | D3D12_ROOT_SIGNATURE_FLAG_DENY_MESH_SHADER_ROOT_ACCESS);
 
 		// General layout:
 		std::vector<D3D12_ROOT_PARAMETER1> params;
@@ -195,8 +197,8 @@ void Pipeline::configureGraphics(const std::string& name, const Settings& settin
 
 	desc.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
 	desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	desc.NumRenderTargets = settings.pixel ? 1 : 0;
-	desc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.NumRenderTargets = needsPixelShader ? 1 : 0;
+	desc.RTVFormats[0] = settings.rtFormat;
 	for (int i = desc.NumRenderTargets; i < 8; ++i) {
 		desc.RTVFormats[i] = DXGI_FORMAT_UNKNOWN;
 	}
