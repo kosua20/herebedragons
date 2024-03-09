@@ -8,15 +8,17 @@
 #include <cstdlib>
 #include <cstring>
 
+struct Memory;
+
 class Skybox {
 	
 public:
 	
 	Skybox();
 	
-	void render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, texbuffer_t * _texbuf, VECTOR cam_pos);
+	void render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, VECTOR cam_pos, Memory& memory);
 	
-	void init(int points_count, int * points, int vc, VECTOR * v, VECTOR * uv, unsigned char * t);
+	void init(int pc, int * p, int vc, VECTOR * v, VECTOR * uv, unsigned char* t[6], unsigned char * c[6]);
 	
 	
 private:
@@ -29,12 +31,15 @@ private:
 	int * _points;
 	VECTOR * _vertices;
 	VECTOR * _uvs;
-	unsigned char * _texture;
+
+	unsigned char * _textures[6];
+	unsigned char * _cluts[6];
 	
 	prim_t prim;
 	color_t color;
-	clutbuffer_t clut;
 	lod_t lod;
+	texbuffer_t tex;
+	clutbuffer_t clut;
 };
 
 #endif

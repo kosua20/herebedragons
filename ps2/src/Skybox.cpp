@@ -16,6 +16,7 @@
 #include <math.h>
 #include "transform.h"
 #include "Skybox.hpp"
+#include "Scene.hpp"
 
 
 
@@ -43,46 +44,33 @@ Skybox::Skybox(){
 	lod.min_filter = LOD_MIN_NEAREST;
 	lod.l = 0;
 	lod.k = 0;
-	
-	clut.storage_mode = CLUT_STORAGE_MODE1;
+
+	tex.width = 512;
+	tex.psm = GS_PSM_8;
+	tex.info.width = draw_log2(512);
+	tex.info.height = draw_log2(512);
+	tex.info.components = TEXTURE_COMPONENTS_RGB;
+	tex.info.function = TEXTURE_FUNCTION_MODULATE;
+
 	clut.start = 0;
-	clut.psm = 0;
-	clut.load_method = CLUT_NO_LOAD;
-	clut.address = 0;
-	
+	clut.storage_mode = CLUT_STORAGE_MODE1;
+	clut.load_method = CLUT_LOAD;
+	clut.psm = GS_PSM_32;
 }
 
-void Skybox::init(int points_count, int * points, int vc, VECTOR * v, VECTOR * uv, unsigned char * t){
-	_points_count = points_count;
-	_points = points;
+void Skybox::init(int pc, int * p, int vc, VECTOR * v, VECTOR * uv, unsigned char * t[6], unsigned char * c[6]){
+	_points_count = pc;
+	_points = p;
 	_vertex_count = vc;
 	_vertices = v;
 	_uvs = uv;
-	_texture = t;
+	for(int i = 0; i < 6; ++i){
+		_textures[i] = t[i];
+		_cluts[i] = c[i];
+	}
 }
 
-void Skybox::render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, texbuffer_t * _texbuf, VECTOR cam_pos){
-	
-	
-	// Load the texture into vram.
-	qword_t * qt = texturePacket->data;
-	
-	qt = draw_texture_transfer(qt, _texture, 256, 256, GS_PSM_24, _texbuf->address, _texbuf->width);
-	
-	qt = draw_texture_flush(qt);
-	dma_channel_send_chain(DMA_CHANNEL_GIF, texturePacket->data, qt - texturePacket->data, 0,0);
-	dma_wait_fast();
-	
-	qword_t * q = packet->data;
-	qword_t * start = q++;
-
-	// Texture sampling.
-	q = draw_texture_sampling(q, 0, &lod);
-	q = draw_texturebuffer(q, 0, _texbuf, &clut);
-	
-	xyz_t   *verts;
-	texel_t *uvs;
-	color_t *colors;
+void Skybox::render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, VECTOR cam_pos, Memory& memory){
 	
 	// UPDATE
 	// Create the local_world matrix.
@@ -93,78 +81,96 @@ void Skybox::render(packet_t * packet, packet_t * texturePacket, MATRIX world_vi
 	// Create the local_screen matrix.
 	create_local_screen(local_screen, local_world, world_view, view_screen);
 	
-	VECTOR *temp_vertices;
-	temp_vertices = static_cast<VECTOR *>(memalign(128, sizeof(VECTOR) * _vertex_count));
-	
 	// Calculate the vertex values.
-	calculate_vertices_no_clip(temp_vertices, _vertex_count, _vertices, local_screen);
+	calculate_vertices_no_clip(memory.verts_tmp, _vertex_count, _vertices, local_screen);
 	
 	// Convert floating point vertices to fixed point and translate to center of screen.
-	verts  = static_cast<xyz_t*>(memalign(128, sizeof(xyz_t) * _vertex_count));
-	colors = static_cast<color_t*>(memalign(128, sizeof(color_t) * _vertex_count));
-	uvs = static_cast<texel_t*>(memalign(128, sizeof(texel_t)  * _vertex_count));
-	
-	draw_convert_xyz(verts, 2048, 2048, 32, _vertex_count, (vertex_f_t*)temp_vertices);
-	draw_convert_white_q(colors, _vertex_count, (vertex_f_t*)temp_vertices);
-	draw_convert_st(uvs, _vertex_count, (vertex_f_t*)temp_vertices, (texel_f_t*)_uvs);
-	
+	draw_convert_xyz(memory.verts_final, 2048, 2048, 16, _vertex_count, (vertex_f_t*)memory.verts_tmp);
+	draw_convert_white_q(memory.colors_final, _vertex_count, (vertex_f_t*)memory.verts_tmp);
+	draw_convert_st(memory.uvs_final, _vertex_count, (vertex_f_t*)memory.verts_tmp, (texel_f_t*)_uvs);
+
 	// QUEUE
 	// Draw the triangles using triangle primitive type.
-	q = draw_prim_start(q,0,&prim, &color);
-	u64 *dw = (u64*)(q);
-	
-	for(int i = 0; i < _points_count; i+=3){
-		
-		int p0 = _points[i];
-		int p1 = _points[i+1];
-		int p2 = _points[i+2];
 
-		// Backface culling.
-		float orientation = (temp_vertices[p1][0] - temp_vertices[p0][0]) * (temp_vertices[p2][1] - temp_vertices[p0][1]) - (temp_vertices[p1][1] - temp_vertices[p0][1]) * (temp_vertices[p2][0] - temp_vertices[p0][0]);
-		if(orientation < 0.0) {
-			continue;
-		}
-		
-		// Clipping.
-		// As soon as one vertex is clipped, we discard the triangle.
-		// We rely on the relative high-density of the meshes to avoid having huge faces disappearing all of a sudden.
-		if(temp_vertices[p0][2] < -1.0 || temp_vertices[p0][2] > 0 || fabs(temp_vertices[p0][0]) > 1.0 || fabs(temp_vertices[p0][1]) > 1.0){
-			continue;
-		}
-		if(temp_vertices[p1][2] < -1.0 || temp_vertices[p1][2] > 0 || fabs(temp_vertices[p1][0]) > 1.0 || fabs(temp_vertices[p1][1]) > 1.0){
-			continue;
-		}
-		if(temp_vertices[p2][2] < -1.0 || temp_vertices[p2][2] > 0 || fabs(temp_vertices[p2][0]) > 1.0 || fabs(temp_vertices[p2][1]) > 1.0){
-			continue;
-		}
+	for(int face = 0; face < 6; ++face){
+
+		// Load the texture into vram.
+		qword_t * qt = texturePacket->data;
+
+		qt = draw_texture_transfer(qt, _textures[face], 512, 512, GS_PSM_8, memory.texture, 512);
+		qt = draw_texture_transfer(qt, _cluts[face], 16, 16, GS_PSM_32, memory.palette, 16);
+
+		qt = draw_texture_flush(qt);
+		dma_channel_send_chain(DMA_CHANNEL_GIF, texturePacket->data, qt - texturePacket->data, 0,0);
+		dma_wait_fast();
+
+		qword_t * q = packet->data;
+		qword_t * start = q++;
 	
-		*dw++ = colors[p0].rgbaq;
-		*dw++ = uvs[p0].uv;
-		*dw++ = verts[p0].xyz;
+		// Texture sampling.
+		tex.address = memory.texture;
+		clut.address = memory.palette;
+		q = draw_texture_sampling(q, 0, &lod);
+		q = draw_texturebuffer(q, 0, &tex, &clut);
+		q = draw_prim_start(q,0,&prim, &color);
+		u64 *dw = (u64*)(q);
 		
-		*dw++ = colors[p1].rgbaq;
-		*dw++ = uvs[p1].uv;
-		*dw++ = verts[p1].xyz;
+		for(int i =( _points_count/6) * face; i < (_points_count/6)*(face+1); i+=3){
+			
+			const int p0 = _points[i];
+			const int p1 = _points[i+1];
+			const int p2 = _points[i+2];
+
+			const float p0x = memory.verts_tmp[p0][0];
+			const float p0y = memory.verts_tmp[p0][1];
+			const float p1x = memory.verts_tmp[p1][0];
+			const float p1y = memory.verts_tmp[p1][1];
+			const float p2x = memory.verts_tmp[p2][0];
+			const float p2y = memory.verts_tmp[p2][1];
+
+			// Backface culling.
+			const float orientation = (p1x - p0x) * (p2y - p0y) - (p1y - p0y) * (p2x - p0x);
+			if(orientation < 0.0f) {
+				continue;
+			}
+			
+			// Clipping.
+			// As soon as one vertex is clipped, we discard the triangle.
+			// We rely on the relative high-density of the meshes to avoid having huge faces disappearing all of a sudden.
+			if(fabs(p0x) > 1.0f || fabs(p0y) > 1.0f || fabs(p1x) > 1.0f || fabs(p1y) > 1.0f || fabs(p2x) > 1.0f || fabs(p2y) > 1.0f){
+				continue;
+			}
+
+			const float p0z = memory.verts_tmp[p0][2];
+			const float p1z = memory.verts_tmp[p1][2];
+			const float p2z = memory.verts_tmp[p2][2];
+			if(p0z < -1.f || p0z > 0.f || p1z < -1.f || p1z > 0.f || p2z < -1.f || p2z > 0.f){
+				continue;
+			}
 		
-		*dw++ = colors[p2].rgbaq;
-		*dw++ = uvs[p2].uv;
-		*dw++ = verts[p2].xyz;
+			*dw++ = memory.colors_final[p0].rgbaq;
+			*dw++ = memory.uvs_final[p0].uv;
+			*dw++ = memory.verts_final[p0].xyz;
+			
+			*dw++ = memory.colors_final[p1].rgbaq;
+			*dw++ = memory.uvs_final[p1].uv;
+			*dw++ = memory.verts_final[p1].xyz;
+			
+			*dw++ = memory.colors_final[p2].rgbaq;
+			*dw++ = memory.uvs_final[p2].uv;
+			*dw++ = memory.verts_final[p2].xyz;
+			
+		}
+		// Check if we're in middle of a qword or not.
+		while (reinterpret_cast<u32>(dw) % 16) {
+			*dw++ = 0u;
+		}
 		
+		q = draw_prim_end((qword_t*)dw,3,DRAW_STQ_REGLIST);
+		q = draw_finish(q);
+		DMATAG_END(start, q - start - 1, 0, 0, 0);
+		
+		dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
+		dma_wait_fast();
 	}
-	// Check if we're in middle of a qword or not.
-	while (reinterpret_cast<u32>(dw) % 16) {
-		*dw++ = 0u;
-	}
-	
-	q = draw_prim_end((qword_t*)dw,3,DRAW_STQ_REGLIST);
-	q = draw_finish(q);
-	DMATAG_END(start, q - start - 1, 0, 0, 0);
-	
-	dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
-	dma_wait_fast();
-	
-	free(temp_vertices);
-	free(uvs);
-	free(verts);
-	free(colors);
 }

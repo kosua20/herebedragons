@@ -47,7 +47,7 @@ void setupContext(framebuffer_t * frames, zbuffer_t & z){
 	z.mask = 0;
 	z.method = ZTEST_METHOD_GREATER_EQUAL;
 	z.zsm = GS_ZBUF_16;
-	z.address = graph_vram_allocate(frames[0].width,frames[0].height,z.zsm, GRAPH_ALIGN_PAGE);
+	z.address = graph_vram_allocate(frames[0].width,frames[0].height, z.zsm, GRAPH_ALIGN_PAGE);
 	
 	// Set video mode.
 	graph_set_mode(GRAPH_MODE_INTERLACED, graph_get_region(), GRAPH_MODE_FIELD, GRAPH_DISABLE);
@@ -93,8 +93,8 @@ int main(){
 	
 	setupContext(framebuffers, z);
 	
-	// Init scene avec graphic setup.
-	Scene scene(framebuffers[0].width, framebuffers[0].height, &z);
+	// Init scene and graphic setup.
+	Scene scene(framebuffers[0].width, framebuffers[0].height);
 	
 	// The data packets for double buffering dma sends.
 	packet_t *generalPackets[2];
@@ -119,7 +119,7 @@ int main(){
 		textureCurrent = texturePackets[context];
 		// Render.
 		scene.update(pad);
-		scene.clear(generalCurrent);
+		scene.clear(generalCurrent, &z);
 		scene.render(generalCurrent, textureCurrent);
 		
 		// Wait for scene to finish drawing

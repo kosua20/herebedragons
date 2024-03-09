@@ -8,15 +8,17 @@
 #include <cstdlib>
 #include <cstring>
 
+struct Memory;
+
 class Object {
 	
 public:
 	
-	Object(bool interpolateTexture);
+	Object();
 	
-	void render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, texbuffer_t * _texbuf);
+	void render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, Memory& memory);
 	
-	void init(int pc, int vc, int * p, VECTOR * v, VECTOR * uv, VECTOR * n, unsigned char * t);
+	void init(int pc, int vc, int * p, VECTOR * v, VECTOR * uv, VECTOR * n, unsigned char * t, unsigned char * c);
 	
 	VECTOR object_position;
 	VECTOR object_rotation;
@@ -34,11 +36,13 @@ private:
 	VECTOR * _uvs;
 	VECTOR * _normals;
 	unsigned char * _texture;
+	unsigned char * _clut;
 	
 	prim_t prim;
 	color_t color;
-	clutbuffer_t clut;
 	lod_t lod;
+	texbuffer_t tex;
+	clutbuffer_t clut;
 };
 
 #endif

@@ -10,7 +10,12 @@
 #include "data/dragon_data.h"
 
 // TEXTURES
-#include "data/cubemap_texture.h"
+#include "data/cubemap_b_texture.h"
+#include "data/cubemap_d_texture.h"
+#include "data/cubemap_f_texture.h"
+#include "data/cubemap_l_texture.h"
+#include "data/cubemap_r_texture.h"
+#include "data/cubemap_u_texture.h"
 #include "data/floor_texture.h"
 #include "data/dragon_texture.h"
 #include "data/monkey_texture.h"
