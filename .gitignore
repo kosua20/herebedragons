@@ -36,5 +36,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+*.o
 pico8/ext/
 webgpu/build/
