@@ -9,6 +9,7 @@
 #include <gif_tags.h>
 #include <packet.h>
 #include <math.h>
+#include <malloc.h>
 
 #include "data.h"
 #include "transform.h"

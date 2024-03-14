@@ -1,29 +1,28 @@
 #include <tamtypes.h>
 #include <graph.h>
 #include <string.h>
-#include <floatlib.h>
 #include <math3d.h>
 
 #include "transform.h"
 
 
 void calculate_vertices_no_clip(VECTOR *output,  int count, VECTOR *vertices, MATRIX local_screen) {
-	asm __volatile__ (
-					  "lqc2		vf1, 0x00(%3)	\n"
-					  "lqc2		vf2, 0x10(%3)	\n"
-					  "lqc2		vf3, 0x20(%3)	\n"
-					  "lqc2		vf4, 0x30(%3)	\n"
+asm __volatile__ (
+					  "lqc2		$vf1, 0x00(%3)	\n"
+					  "lqc2		$vf2, 0x10(%3)	\n"
+					  "lqc2		$vf3, 0x20(%3)	\n"
+					  "lqc2		$vf4, 0x30(%3)	\n"
 					  "1:					\n"
-					  "lqc2		vf6, 0x00(%2)	\n"
-					  "vmulaw		ACC, vf4, vf0	\n"
-					  "vmaddax		ACC, vf1, vf6	\n"
-					  "vmadday		ACC, vf2, vf6	\n"
-					  "vmaddz		vf7, vf3, vf6	\n"
+					  "lqc2		$vf6, 0x00(%2)	\n"
+					  "vmulaw		$ACC, $vf4, $vf0	\n"
+					  "vmaddax		$ACC, $vf1, $vf6	\n"
+					  "vmadday		$ACC, $vf2, $vf6	\n"
+					  "vmaddz		$vf7, $vf3, $vf6	\n"
 					  "3:					\n"
-					  "vdiv		Q, vf0w, vf7w	\n"
+					  "vdiv		$Q, $vf0w, $vf7w	\n"
 					  "vwaitq				\n"
-					  "vmulq.xyz		vf7, vf7, Q	\n"
-					  "sqc2		vf7, 0x00(%0)	\n"
+					  "vmulq.xyz		$vf7, $vf7, $Q	\n"
+					  "sqc2		$vf7, 0x00(%0)	\n"
 					  "4:					\n"
 					  "addi		%0, 0x10	\n"
 					  "addi		%2, 0x10	\n"
