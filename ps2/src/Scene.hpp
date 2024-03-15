@@ -32,9 +32,9 @@ public:
 	
 	Scene(int width, int height);
 	
-	void clear(packet_t * packet, zbuffer_t * z);
+	void clear(packet2_t * packet, zbuffer_t * z);
 	
-	void render(packet_t * packet, packet_t * texturePacket);
+	void render(packet2_t * packet, packet2_t * texturePacket);
 	
 	void update(Pad & pad);
 	

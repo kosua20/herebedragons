@@ -8,7 +8,7 @@
 #include <gs_psm.h>
 #include <dma_tags.h>
 #include <gif_tags.h>
-#include <packet.h>
+#include <packet2.h>
 #include <debug.h>
 
 #include <tamtypes.h>
@@ -70,8 +70,8 @@ void Skybox::init(int pc, int * p, int vc, VECTOR * v, VECTOR * uv, unsigned cha
 	}
 }
 
-void Skybox::render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, VECTOR cam_pos, Memory& memory){
-	
+void Skybox::render(packet2_t * p, packet2_t * t, MATRIX world_view, MATRIX view_screen, VECTOR cam_pos, Memory& memory){
+
 	// UPDATE
 	// Create the local_world matrix.
 	MATRIX local_world;
@@ -94,26 +94,27 @@ void Skybox::render(packet_t * packet, packet_t * texturePacket, MATRIX world_vi
 
 	for(int face = 0; face < 6; ++face){
 
+		packet2_reset(p, 0);
+		packet2_reset(t, 0);
+
 		// Load the texture into vram.
-		qword_t * qt = texturePacket->data;
+		packet2_update(t,draw_texture_transfer(t->next, _textures[face], 512, 512, GS_PSM_8, memory.texture, 512));
+		packet2_update(t,draw_texture_transfer(t->next, _cluts[face], 16, 16, GS_PSM_32, memory.palette, 16));
 
-		qt = draw_texture_transfer(qt, _textures[face], 512, 512, GS_PSM_8, memory.texture, 512);
-		qt = draw_texture_transfer(qt, _cluts[face], 16, 16, GS_PSM_32, memory.palette, 16);
-
-		qt = draw_texture_flush(qt);
-		dma_channel_send_chain(DMA_CHANNEL_GIF, texturePacket->data, qt - texturePacket->data, 0,0);
+		packet2_update(t,draw_texture_flush(t->next));
+		dma_channel_send_packet2(t, DMA_CHANNEL_GIF, 0);
 		dma_wait_fast();
 
-		qword_t * q = packet->data;
-		qword_t * start = q++;
-	
+		// Room for dma end tag
+		qword_t* start = (p->next)++;
+		
 		// Texture sampling.
 		tex.address = memory.texture;
 		clut.address = memory.palette;
-		q = draw_texture_sampling(q, 0, &lod);
-		q = draw_texturebuffer(q, 0, &tex, &clut);
-		q = draw_prim_start(q,0,&prim, &color);
-		u64 *dw = (u64*)(q);
+		packet2_update(p, draw_texture_sampling(p->next, 0, &lod));
+		packet2_update(p, draw_texturebuffer(p->next, 0, &tex, &clut));
+		packet2_update(p, draw_prim_start(p->next,0,&prim, &color));
+		u64 *dw = (u64*)(p->next);
 		
 		for(int i =( _points_count/6) * face; i < (_points_count/6)*(face+1); i+=3){
 			
@@ -165,12 +166,12 @@ void Skybox::render(packet_t * packet, packet_t * texturePacket, MATRIX world_vi
 		while (reinterpret_cast<u32>(dw) % 16) {
 			*dw++ = 0u;
 		}
-		
-		q = draw_prim_end((qword_t*)dw,3,DRAW_STQ_REGLIST);
-		q = draw_finish(q);
-		DMATAG_END(start, q - start - 1, 0, 0, 0);
-		
-		dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
+		p->next = (qword_t*)dw;
+		packet2_update(p, draw_prim_end(p->next,3,DRAW_STQ_REGLIST));
+		packet2_update(p, draw_finish(p->next));
+		DMATAG_END(start, p->next - start - 1, 0, 0, 0);
+
+		dma_channel_send_packet2(p, DMA_CHANNEL_GIF, 0);
 		dma_wait_fast();
 	}
 }

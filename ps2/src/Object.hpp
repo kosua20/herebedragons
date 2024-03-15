@@ -16,7 +16,7 @@ public:
 	
 	Object();
 	
-	void render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, Memory& memory);
+	void render(packet2_t * packet, packet2_t * texturePacket, MATRIX world_view, MATRIX view_screen, Memory& memory);
 	
 	void init(int pc, int vc, int * p, VECTOR * v, VECTOR * uv, VECTOR * n, unsigned char * t, unsigned char * c);
 	

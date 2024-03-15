@@ -7,7 +7,7 @@
 #include <gs_psm.h>
 #include <dma_tags.h>
 #include <gif_tags.h>
-#include <packet.h>
+#include <packet2.h>
 #include <math.h>
 #include <malloc.h>
 
@@ -75,17 +75,17 @@ void Scene::allocateVRAM(unsigned int maxVertexCount, unsigned int maxTextureSiz
 
 }
 
-void Scene::clear(packet_t * packet, zbuffer_t * z){
+void Scene::clear(packet2_t * p, zbuffer_t * z){
 	
-	qword_t * q = packet->data;
-	qword_t * start = q++;
-	q = draw_disable_tests(q, 0, z);
-	q = draw_clear(q, 0, 2048.0f-(_width/2), 2048.0f-(_height/2), _width, _height, 74, 68, 85);
-	q = draw_enable_tests(q, 0, z);
-	q = draw_finish(q);
-	
-	DMATAG_END(start, q - start - 1, 0, 0, 0);
-	dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
+	// Room for dma end tag
+	qword_t* start = (p->next)++;
+	packet2_update(p, draw_disable_tests(p->next, 0, z));
+	packet2_update(p, draw_clear(p->next, 0, 2048.0f-(_width/2), 2048.0f-(_height/2), _width, _height, 74, 68, 85));
+	packet2_update(p, draw_enable_tests(p->next, 0, z));
+	packet2_update(p, draw_finish(p->next));
+
+	DMATAG_END(start, p->next - start - 1, 0, 0, 0);
+	dma_channel_send_packet2(p, DMA_CHANNEL_GIF, 0);
 	dma_wait_fast();
 }
 
@@ -132,7 +132,7 @@ void Scene::update(Pad & pad){
 }
 
 
-void Scene::render(packet_t * packet, packet_t * texturePacket){
+void Scene::render(packet2_t * packet, packet2_t * texturePacket){
 	
 	// Create the world_view matrix.
 	create_look_at_center(world_view,  camera_position);

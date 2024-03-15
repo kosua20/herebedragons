@@ -8,7 +8,7 @@
 #include <gs_psm.h>
 #include <dma_tags.h>
 #include <gif_tags.h>
-#include <packet.h>
+#include <packet2.h>
 
 // C/C++ standard libraries:
 #include <climits>
@@ -57,21 +57,20 @@ void setupContext(framebuffer_t * frames, zbuffer_t & z){
 	// Initialize the screen and tie the first framebuffer to the read circuits.
 	graph_set_framebuffer_filtered(frames[0].address, frames[0].width, frames[0].psm, 0, 0);
 	graph_enable_output();
-	// Create initial setup packet.
-	packet_t *packet = packet_init(16,PACKET_NORMAL);
-	// This is our generic qword pointer.
-	qword_t *q0 = packet->data;
-	// This will setup a default drawing environment.
-	q0 = draw_setup_environment(q0,0,&frames[0],&z);
-	// Now reset the primitive origin to 2048-width/2,2048-height/2.
-	q0 = draw_primitive_xyoffset(q0,0,(2048-frames[0].width/2),(2048-frames[0].height/2));
-	// Finish setting up the environment.
-	q0 = draw_finish(q0);
-	// Now send the packet, no need to wait since it's the first.
-	dma_channel_send_normal(DMA_CHANNEL_GIF,packet->data,q0 - packet->data, 0, 0);
-	dma_wait_fast();
-	packet_free(packet);
 
+	// Create initial setup packet.
+	packet2_t *p = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
+	// This will setup a default drawing environment.
+	packet2_update(p, draw_setup_environment(p->next, 0, &frames[0],&z));
+	// Now reset the primitive origin to 2048-width/2,2048-height/2.
+	packet2_update(p, draw_primitive_xyoffset(p->next,0,(2048-frames[0].width/2),(2048-frames[0].height/2)));
+	// Finish setting up the environment.
+	packet2_update(p, draw_finish(p->next));
+
+	// Now send the packet, no need to wait since it's the first.
+	dma_channel_send_packet2(p, DMA_CHANNEL_GIF, 0);
+	dma_wait_fast();
+	packet2_free(p);
 }
 
 int main(){
@@ -97,17 +96,17 @@ int main(){
 	Scene scene(framebuffers[0].width, framebuffers[0].height);
 	
 	// The data packets for double buffering dma sends.
-	packet_t *generalPackets[2];
-	packet_t *generalCurrent;
-	packet_t *texturePackets[2];
-	packet_t *textureCurrent;
-	packet_t *flipBuffersPacket;
+	packet2_t *generalPackets[2];
+	packet2_t *generalCurrent;
+	packet2_t *texturePackets[2];
+	packet2_t *textureCurrent;
+	packet2_t *flipBuffersPacket;
 	
-	generalPackets[0] = packet_init(65535,PACKET_NORMAL);
-	generalPackets[1] = packet_init(65535,PACKET_NORMAL);
-	texturePackets[0] = packet_init(128,PACKET_NORMAL);
-	texturePackets[1] = packet_init(128,PACKET_NORMAL);
-	flipBuffersPacket = packet_init(8, PACKET_UCAB);
+	generalPackets[0] = packet2_create(65535, P2_TYPE_NORMAL, P2_MODE_CHAIN, 0);
+	generalPackets[1] = packet2_create(65535, P2_TYPE_NORMAL, P2_MODE_CHAIN, 0);
+	texturePackets[0] = packet2_create(1024, P2_TYPE_NORMAL, P2_MODE_CHAIN, 0);
+	texturePackets[1] = packet2_create(1024, P2_TYPE_NORMAL, P2_MODE_CHAIN, 0);
+	flipBuffersPacket = packet2_create(8, P2_TYPE_UNCACHED_ACCL, P2_MODE_NORMAL, 0);
 	int context = 0;
 	
 	for(;;){
@@ -117,6 +116,10 @@ int main(){
 		// Current packets.
 		generalCurrent = generalPackets[context];
 		textureCurrent = texturePackets[context];
+		packet2_reset(generalCurrent, 0);
+		packet2_reset(textureCurrent, 0);
+		packet2_reset(flipBuffersPacket, 0);
+
 		// Render.
 		scene.update(pad);
 		scene.clear(generalCurrent, &z);
@@ -133,14 +136,20 @@ int main(){
 		context ^= 1;
 		
 		// Flip framebuffer.
-		qword_t * q = flipBuffersPacket->data;
-		q++;
-		q = draw_framebuffer(q, 0, &(framebuffers[context]));
-		q = draw_finish(q);
+		// This will setup a default drawing environment.
+		packet2_update(flipBuffersPacket, draw_framebuffer(flipBuffersPacket->next, 0, &(framebuffers[context])));
+		packet2_update(flipBuffersPacket, draw_finish(flipBuffersPacket->next));
+		
 		dma_wait_fast();
-		dma_channel_send_normal_ucab(DMA_CHANNEL_GIF, flipBuffersPacket->data, q - flipBuffersPacket->data, 0);
+		dma_channel_send_packet2(flipBuffersPacket, DMA_CHANNEL_GIF, 0);
 		draw_wait_finish();
 	}
+
+	packet2_free(generalPackets[0]);
+	packet2_free(generalPackets[1]);
+	packet2_free(texturePackets[0]);
+	packet2_free(texturePackets[1]);
+	packet2_free(flipBuffersPacket);
 
 	SleepThread();
 	return 0;

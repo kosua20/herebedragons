@@ -8,7 +8,7 @@
 #include <gs_psm.h>
 #include <dma_tags.h>
 #include <gif_tags.h>
-#include <packet.h>
+#include <packet2.h>
 #include <debug.h>
 
 #include <tamtypes.h>
@@ -89,26 +89,24 @@ void Object::init(int pc, int vc, int * p, VECTOR * v, VECTOR * uv, VECTOR * n, 
 	_clut = c;
 }
 
-void Object::render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, Memory& memory){
+void Object::render(packet2_t * p, packet2_t * t, MATRIX world_view, MATRIX view_screen, Memory& memory){
 	
-	// Load the texture into vram.
-	qword_t * qt = texturePacket->data;
-	
-	qt = draw_texture_transfer(qt, _texture, 1024, 1024, GS_PSM_8, memory.texture, 1024);
-	qt = draw_texture_transfer(qt, _clut, 16, 16, GS_PSM_32, memory.palette, 16);
-	
-	qt = draw_texture_flush(qt);
-	dma_channel_send_chain(DMA_CHANNEL_GIF, texturePacket->data, qt - texturePacket->data, 0,0);
+	packet2_reset(p, 0);
+	packet2_reset(t, 0);
+
+	packet2_update(t, draw_texture_transfer(t->next, _texture, 1024, 1024, GS_PSM_8, memory.texture, 1024));
+	packet2_update(t, draw_texture_transfer(t->next, _clut, 16, 16, GS_PSM_32, memory.palette, 16));
+	packet2_update(t, draw_texture_flush(t->next));
+	dma_channel_send_packet2(t, DMA_CHANNEL_GIF, 0);
 	dma_wait_fast();
 	
-	qword_t * q = packet->data;
-	qword_t * start = q++;
-
+	// Room for dma end tag
+	qword_t* start = (p->next)++;
 	// Texture sampling.
 	tex.address = memory.texture;
 	clut.address = memory.palette;
-	q = draw_texture_sampling(q, 0, &lod);
-	q = draw_texturebuffer(q, 0, &tex, &clut);
+	packet2_update(p, draw_texture_sampling(p->next, 0, &lod));
+	packet2_update(p, draw_texturebuffer(p->next, 0, &tex, &clut));
 	
 	// UPDATE
 	// Create the local_world matrix.
@@ -140,8 +138,8 @@ void Object::render(packet_t * packet, packet_t * texturePacket, MATRIX world_vi
 	
 	// QUEUE
 	// Draw the triangles using triangle primitive type.
-	q = draw_prim_start(q,0,&prim, &color);
-	u64 *dw = (u64*)(q);
+	packet2_update(p, draw_prim_start(p->next,0, &prim, &color));
+	u64 *dw = (u64*)(p->next);
 	
 	for(int i = 0; i < _points_count; i+=3){
 		
@@ -193,12 +191,13 @@ void Object::render(packet_t * packet, packet_t * texturePacket, MATRIX world_vi
 	while (reinterpret_cast<u32>(dw) % 16) {
 		*dw++ = 0u;
 	}
+	p->next = (qword_t*)dw;
 	
-	q = draw_prim_end((qword_t*)dw,3,DRAW_STQ_REGLIST);
-	q = draw_finish(q);
-	DMATAG_END(start, q - start - 1, 0, 0, 0);
-	
-	dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
+	packet2_update(p, draw_prim_end(p->next,3,DRAW_STQ_REGLIST));
+	packet2_update(p, draw_finish(p->next));
+	DMATAG_END(start, p->next - start - 1, 0, 0, 0);
+
+	dma_channel_send_packet2(p, DMA_CHANNEL_GIF, 0);
 	dma_wait_fast();
 	
 }

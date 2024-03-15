@@ -5,7 +5,7 @@ endif
 EE_BIN = dragon.elf
 EE_OBJS = src/transform.o src/Pad.o src/Object.o src/Skybox.o src/Scene.o src/dragon.o
 
-EE_LIBS = -lc -ldraw -lgraph -lmath3d -lpacket -ldma -lpatches -ldebug -lpad
+EE_LIBS = -lc -ldraw -lgraph -lmath3d -lpacket2 -ldma -lpatches -ldebug -lpad
 
 GLOBAL_DEFINES =                      \
 	-I$(SOURCE_PATH)                  \

@@ -16,7 +16,7 @@ public:
 	
 	Skybox();
 	
-	void render(packet_t * packet, packet_t * texturePacket, MATRIX world_view, MATRIX view_screen, VECTOR cam_pos, Memory& memory);
+	void render(packet2_t * packet, packet2_t * texturePacket, MATRIX world_view, MATRIX view_screen, VECTOR cam_pos, Memory& memory);
 	
 	void init(int pc, int * p, int vc, VECTOR * v, VECTOR * uv, unsigned char* t[6], unsigned char * c[6]);
 	
