@@ -3,9 +3,11 @@ SOURCE_PATH = ./
 endif
 
 EE_BIN = dragon.elf
-EE_OBJS = src/transform.o src/Pad.o src/Object.o src/Skybox.o src/Scene.o src/dragon.o
+EE_OBJS = src/data/skybox_program.o src/data/object_program.o src/transform.o src/Pad.o src/Draw.o src/Object.o src/Skybox.o src/Scene.o src/dragon.o
 
 EE_LIBS = -lc -ldraw -lgraph -lmath3d -lpacket2 -ldma -lpatches -ldebug -lpad
+
+EE_DVP = dvp-as
 
 GLOBAL_DEFINES =                      \
 	-I$(SOURCE_PATH)                  \
@@ -34,6 +36,8 @@ EE_CXXFLAGS +=                \
 	-Wwrite-strings           \
 	$(GLOBAL_DEFINES)
 
+%.o: %.vsm
+	$(EE_DVP) $< -o $@
 
 all: $(EE_BIN)
 	$(EE_STRIP) --strip-all $(EE_BIN)

@@ -1,0 +1,70 @@
+;-------------------------
+;-------------------------
+;-----VCL CODE------------
+;-------------------------
+;-------------------------
+; =================================================
+; flowMon::Emit() vcl 1.4beta7 produced this code:
+		.vu
+		.align 4
+		.global	VU1SkyboxProgram_CodeStart
+		.global	VU1SkyboxProgram_CodeEnd
+VU1SkyboxProgram_CodeStart:
+__v_skybox_program_vcl_4:
+; _LNOPT_w=[ normal2 ] 23 [23 0] 23   [__v_skybox_program_vcl_4]
+         NOP                                                        lq            VF03,1(VI00)                        
+         NOP                                                        xtop          VI04                                
+         NOP                                                        lq            VF05,2(VI00)                        
+         NOP                                                        ilw.w         VI06,0(VI04)                        
+         NOP                                                        lq            VF04,1(VI04)                        
+         NOP                                                        lq            VF06,2(VI04)                        
+         NOP                                                        lq.xyz        VF01,0(VI00)                        
+         NOP                                                        lq.w          VF02,0(VI00)                        
+         NOP                                                        fcset         0                                   
+         NOP                                                        iaddiu        VI02,VI04,0x00000007                
+         NOP                                                        iadd          VI03,VI02,VI06                      
+         NOP                                                        lq.xyz        VF02,0(VI04)                        
+         NOP                                                        iadd          VI05,VI03,VI06                      
+         NOP                                                        sqi           VF03,(VI05++)                       
+         NOP                                                        sqi           VF05,(VI05++)                       
+         NOP                                                        sqi           VF03,(VI05++)                       
+         NOP                                                        sqi           VF04,(VI05++)                       
+         NOP                                                        lq            VF03,3(VI04)                        
+         NOP                                                        lq            VF04,4(VI04)                        
+         NOP                                                        lq            VF05,5(VI04)                        
+         NOP                                                        iadd          VI04,VI03,VI06                      
+         NOP                                                        sqi           VF06,(VI05++)                       
+         NOP                                                        iaddiu        VI06,VI06,0                         
+vertLoop:
+; _LNOPT_w=[ normal2 ] 16 [31 15] 32   [vertLoop]
+         NOP                                                        lq.xyz        VF06,0(VI02)                        
+         mulax         ACC,VF03,VF06x                               sq            VF02,1(VI05)                               ;	STALL_LATENCY ?3
+         madday        ACC,VF04,VF06y                               iaddiu        VI03,VI03,0x00000001                
+         maddaz        ACC,VF05,VF06z                               iaddiu        VI05,VI05,0x00000003                
+         madd          VF06,VF00,VF00                               NOP                                               
+         clipw.xyz     VF06xyz,VF06w                                div           Q,VF00w,VF06w                              ;	STALL_LATENCY ?3
+         mulq.xyz      VF06,VF06,Q                                  waitq                                                    ;	STALL_LATENCY ?6
+         mulaw.xyz     ACC,VF01,VF00w                               lq            VF07,-1(VI03)                       
+         madd.xyz      VF06,VF06,VF01                               iaddiu        VI02,VI02,0x00000001                       ;	STALL_LATENCY ?2
+         mulq          VF07,VF07,Q                                  isubiu        VI06,VI06,1                         
+         ftoi4.xy      VF06,VF06                                    fcand         VI01,262143                                ;	STALL_LATENCY ?2
+         ftoi0.z       VF06,VF06                                    iaddiu        VI01,VI01,0x00007fff                
+         NOP                                                        isw.w         VI01,-1(VI05)                       
+         NOP                                                        sq            VF07,-3(VI05)                       
+         NOP                                                        ibgtz         VI06,vertLoop                       
+         NOP                                                        sq.xyz        VF06,-1(VI05)                       
+; _LNOPT_w=[ normal2 ] 3 [1 0] 3   [__v_skybox_program_vcl_7]
+         NOP                                                        xgkick        VI04                                
+         NOP[E]                                                     NOP                                               
+         NOP                                                        NOP                                               
+		.align 4
+VU1SkyboxProgram_CodeEnd:
+;	iCount=42
+; register stats:
+;   7 VU User integer
+;   8 VU User floating point
+;-------------------------
+;-------------------------
+;-------------------------
+;-------------------------
+;-------------------------
