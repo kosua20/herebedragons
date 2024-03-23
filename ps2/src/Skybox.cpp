@@ -10,6 +10,8 @@
 #include <gif_tags.h>
 #include <packet2.h>
 #include <debug.h>
+#include <malloc.h>
+#include <packet2_utils.h>
 
 #include <tamtypes.h>
 #include <string.h>
@@ -17,8 +19,7 @@
 #include "transform.h"
 #include "Skybox.hpp"
 #include "Scene.hpp"
-
-
+#include "Draw.hpp"
 
 Skybox::Skybox(){
 	
@@ -31,19 +32,6 @@ Skybox::Skybox(){
 	prim.antialiasing = DRAW_DISABLE;
 	prim.mapping_type = PRIM_MAP_ST;
 	prim.colorfix = PRIM_UNFIXED;
- 
-	color.r = 0x80;
-	color.g = 0x80;
-	color.b = 0x80;
-	color.a = 0x80;
-	color.q = 1.0f;
-	
-	lod.calculation = LOD_USE_K;
-	lod.max_level = 0;
-	lod.mag_filter = LOD_MAG_LINEAR;
-	lod.min_filter = LOD_MIN_NEAREST;
-	lod.l = 0;
-	lod.k = 0;
 
 	tex.width = 512;
 	tex.psm = GS_PSM_8;
@@ -58,9 +46,10 @@ Skybox::Skybox(){
 	clut.psm = GS_PSM_32;
 }
 
-void Skybox::init(int pc, int * p, int vc, VECTOR * v, VECTOR * uv, unsigned char * t[6], unsigned char * c[6]){
-	_points_count = pc;
-	_points = p;
+void Skybox::init(const Memory& memory, unsigned int vc, VECTOR * v, VECTOR * uv, unsigned char * t[6], unsigned char * c[6]){
+	tex.address = memory.texture;
+	clut.address = memory.palette;
+
 	_vertex_count = vc;
 	_vertices = v;
 	_uvs = uv;
@@ -68,9 +57,10 @@ void Skybox::init(int pc, int * p, int vc, VECTOR * v, VECTOR * uv, unsigned cha
 		_textures[i] = t[i];
 		_cluts[i] = c[i];
 	}
+
 }
 
-void Skybox::render(packet2_t * p, packet2_t * t, MATRIX world_view, MATRIX view_screen, VECTOR cam_pos, Memory& memory){
+void Skybox::render(Commands& commands, Memory& memory, MATRIX world_view, MATRIX view_screen){
 
 	// UPDATE
 	// Create the local_world matrix.
@@ -80,98 +70,51 @@ void Skybox::render(packet2_t * p, packet2_t * t, MATRIX world_view, MATRIX view
 	matrix_unit(local_world);
 	// Create the local_screen matrix.
 	create_local_screen(local_screen, local_world, world_view, view_screen);
-	
-	// Calculate the vertex values.
-	calculate_vertices_no_clip(memory.verts_tmp, _vertex_count, _vertices, local_screen);
-	
-	// Convert floating point vertices to fixed point and translate to center of screen.
-	draw_convert_xyz(memory.verts_final, 2048, 2048, 16, _vertex_count, (vertex_f_t*)memory.verts_tmp);
-	draw_convert_white_q(memory.colors_final, _vertex_count, (vertex_f_t*)memory.verts_tmp);
-	draw_convert_st(memory.uvs_final, _vertex_count, (vertex_f_t*)memory.verts_tmp, (texel_f_t*)_uvs);
 
-	// QUEUE
-	// Draw the triangles using triangle primitive type.
-
+	// Draw each face separately, as it uses a different texture.
+	unsigned int faceVertexCount = _vertex_count / 6;
+	assert(faceVertexCount <= BATCH_VERTEX_SIZE);
+	
 	for(int face = 0; face < 6; ++face){
 
-		packet2_reset(p, 0);
-		packet2_reset(t, 0);
-
 		// Load the texture into vram.
+		packet2_t* t = commands.nextTexture();
 		packet2_update(t,draw_texture_transfer(t->next, _textures[face], 512, 512, GS_PSM_8, memory.texture, 512));
 		packet2_update(t,draw_texture_transfer(t->next, _cluts[face], 16, 16, GS_PSM_32, memory.palette, 16));
-
 		packet2_update(t,draw_texture_flush(t->next));
-		dma_channel_send_packet2(t, DMA_CHANNEL_GIF, 0);
+		dma_channel_send_packet2(t, DMA_CHANNEL_GIF,0);
 		dma_wait_fast();
 
-		// Room for dma end tag
-		qword_t* start = (p->next)++;
-		
-		// Texture sampling.
-		tex.address = memory.texture;
-		clut.address = memory.palette;
-		packet2_update(p, draw_texture_sampling(p->next, 0, &lod));
-		packet2_update(p, draw_texturebuffer(p->next, 0, &tex, &clut));
-		packet2_update(p, draw_prim_start(p->next,0,&prim, &color));
-		u64 *dw = (u64*)(p->next);
-		
-		for(int i =( _points_count/6) * face; i < (_points_count/6)*(face+1); i+=3){
-			
-			const int p0 = _points[i];
-			const int p1 = _points[i+1];
-			const int p2 = _points[i+2];
+		// To keep things simple, rebuild the basic parameter packets at each batch.
+		packet2_t * p = commands.nextIndirect();
+		packet2_add_u32(p, 128); // R
+		packet2_add_u32(p, 128); // G
+		packet2_add_u32(p, 128); // B
+		packet2_add_s32(p, faceVertexCount); // Vertex count
+		packet2_utils_gs_add_texbuff_clut(p, &tex, &clut);
+		packet2_utils_gs_add_prim_giftag(p, &prim, faceVertexCount, DRAW_STQ2_REGLIST, 3, 0);
 
-			const float p0x = memory.verts_tmp[p0][0];
-			const float p0y = memory.verts_tmp[p0][1];
-			const float p1x = memory.verts_tmp[p1][0];
-			const float p1y = memory.verts_tmp[p1][1];
-			const float p2x = memory.verts_tmp[p2][0];
-			const float p2y = memory.verts_tmp[p2][1];
+		// Schedule copies from data to VU1 memory.
+		packet2_t* vuPacket = commands.nextDraw();
+		u32 bufferOffsetQw = 0;
 
-			// Backface culling.
-			const float orientation = (p1x - p0x) * (p2y - p0y) - (p1y - p0y) * (p2x - p0x);
-			if(orientation < 0.0f) {
-				continue;
-			}
-			
-			// Clipping.
-			// As soon as one vertex is clipped, we discard the triangle.
-			// We rely on the relative high-density of the meshes to avoid having huge faces disappearing all of a sudden.
-			if(fabs(p0x) > 1.0f || fabs(p0y) > 1.0f || fabs(p1x) > 1.0f || fabs(p1y) > 1.0f || fabs(p2x) > 1.0f || fabs(p2y) > 1.0f){
-				continue;
-			}
+		// Merge packets
+		packet2_utils_vu_add_unpack_data(vuPacket, bufferOffsetQw, p->base, packet2_get_qw_count(p), 1);
+		bufferOffsetQw += packet2_get_qw_count(p);
+		// Add transformation matrix.
+		packet2_utils_vu_add_unpack_data(vuPacket, bufferOffsetQw, &local_screen, 4, 1);
+		bufferOffsetQw += 4;
+		// Add vertices
+		packet2_utils_vu_add_unpack_data(vuPacket, bufferOffsetQw, _vertices + face * faceVertexCount, faceVertexCount, 1);
+		bufferOffsetQw += faceVertexCount;
+		// Add UVs.
+		packet2_utils_vu_add_unpack_data(vuPacket, bufferOffsetQw, _uvs + face * faceVertexCount, faceVertexCount, 1);
+		bufferOffsetQw += faceVertexCount;
 
-			const float p0z = memory.verts_tmp[p0][2];
-			const float p1z = memory.verts_tmp[p1][2];
-			const float p2z = memory.verts_tmp[p2][2];
-			if(p0z < -1.f || p0z > 0.f || p1z < -1.f || p1z > 0.f || p2z < -1.f || p2z > 0.f){
-				continue;
-			}
-		
-			*dw++ = memory.colors_final[p0].rgbaq;
-			*dw++ = memory.uvs_final[p0].uv;
-			*dw++ = memory.verts_final[p0].xyz;
-			
-			*dw++ = memory.colors_final[p1].rgbaq;
-			*dw++ = memory.uvs_final[p1].uv;
-			*dw++ = memory.verts_final[p1].xyz;
-			
-			*dw++ = memory.colors_final[p2].rgbaq;
-			*dw++ = memory.uvs_final[p2].uv;
-			*dw++ = memory.verts_final[p2].xyz;
-			
-		}
-		// Check if we're in middle of a qword or not.
-		while (reinterpret_cast<u32>(dw) % 16) {
-			*dw++ = 0u;
-		}
-		p->next = (qword_t*)dw;
-		packet2_update(p, draw_prim_end(p->next,3,DRAW_STQ_REGLIST));
-		packet2_update(p, draw_finish(p->next));
-		DMATAG_END(start, p->next - start - 1, 0, 0, 0);
-
-		dma_channel_send_packet2(p, DMA_CHANNEL_GIF, 0);
+		// Execute.
+		packet2_utils_vu_add_start_program(vuPacket, memory.programSkybox);
+		packet2_utils_vu_add_end_tag(vuPacket);
+		dma_channel_send_packet2(vuPacket, DMA_CHANNEL_VIF1, 1);
 		dma_wait_fast();
 	}
 }

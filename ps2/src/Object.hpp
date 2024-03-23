@@ -9,6 +9,7 @@
 #include <cstring>
 
 struct Memory;
+struct Commands;
 
 class Object {
 	
@@ -16,10 +17,10 @@ public:
 	
 	Object();
 	
-	void render(packet2_t * packet, packet2_t * texturePacket, MATRIX world_view, MATRIX view_screen, Memory& memory);
+	void render(Commands& commands, Memory& memory, MATRIX world_view, MATRIX view_screen, VECTOR light_dir);
 	
-	void init(int pc, int vc, int * p, VECTOR * v, VECTOR * uv, VECTOR * n, unsigned char * t, unsigned char * c);
-	
+	void init(const Memory& memory, unsigned int vc, VECTOR * v, VECTOR * n, unsigned char * t, unsigned char * c);
+
 	VECTOR object_position;
 	VECTOR object_rotation;
 	VECTOR object_scale;
@@ -29,18 +30,14 @@ private:
 	Object(const Object &);
 	Object & operator = (const Object &);
 	
-	int _points_count;
-	int _vertex_count;
-	int * _points;
-	VECTOR * _vertices;
-	VECTOR * _uvs;
-	VECTOR * _normals;
+	unsigned int _vertex_count;
+	VECTOR * _vertices __attribute__((aligned(128)));
+	VECTOR * _normals __attribute__((aligned(128)));
+
 	unsigned char * _texture;
 	unsigned char * _clut;
 	
 	prim_t prim;
-	color_t color;
-	lod_t lod;
 	texbuffer_t tex;
 	clutbuffer_t clut;
 };

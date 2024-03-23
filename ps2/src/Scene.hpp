@@ -11,20 +11,7 @@
 #include "Pad.hpp"
 #include "Object.hpp"
 #include "Skybox.hpp"
-
-
-struct Memory {
-	unsigned int texture;
-	unsigned int palette;
-
-	VECTOR* verts_tmp;
-	VECTOR* normals_tmp;
-	VECTOR* lights_tmp;
-
-	xyz_t* verts_final;
-	texel_t* uvs_final;
-	color_t* colors_final;
-};
+#include "Draw.hpp"
 
 class Scene {
 	
@@ -32,9 +19,9 @@ public:
 	
 	Scene(int width, int height);
 	
-	void clear(packet2_t * packet, zbuffer_t * z);
+	void clear(Commands& commands, zbuffer_t * z);
 	
-	void render(packet2_t * packet, packet2_t * texturePacket);
+	void render(Commands& commands);
 	
 	void update(Pad & pad);
 	
@@ -45,23 +32,25 @@ private:
 	Scene(const Scene &);
 	Scene & operator = (const Scene &);
 	
-	void allocateVRAM(unsigned int maxVertexCount, unsigned int maxTextureSize);
-	
-	int _width;
-	int _height;
-	
-	float _radius;
-	float _horizontalAngle;
-	float _verticalAngle;
-	VECTOR camera_position;
+	void allocateVRAM(unsigned int maxTextureSize);
 	
 	Skybox _skybox;
 	Object _plane;
 	Object _monkey;
 	Object _dragon;
 	
-	MATRIX world_view;
-	MATRIX view_screen;
+	MATRIX _world_view;
+	MATRIX _view_screen;
+
+	VECTOR _camera_position;
+	VECTOR _light_direction;
+	float _radius;
+	float _horizontalAngle;
+	float _verticalAngle;
+
+	float _time;
+	int _width;
+	int _height;
 	
 };
 

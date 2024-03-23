@@ -9,7 +9,9 @@
 #include <dma_tags.h>
 #include <gif_tags.h>
 #include <packet2.h>
+#include <packet2_utils.h>
 #include <debug.h>
+#include <malloc.h>
 
 #include <tamtypes.h>
 #include <string.h>
@@ -17,18 +19,7 @@
 #include "transform.h"
 #include "Object.hpp"
 #include "Scene.hpp"
-
-VECTOR light_direction[1] = {
-	{  -0.577f,  -0.577f,  -0.577f, 1.00f }
-};
-
-VECTOR light_color[1] = {
-	{ 1.00f, 1.00f, 1.00f, 1.00f }
-};
-
-int light_type[1] = {
-	LIGHT_DIRECTIONAL
-};
+#include "Draw.hpp"
 
 Object::Object(){
 	
@@ -52,19 +43,6 @@ Object::Object(){
 	prim.mapping_type = PRIM_MAP_ST;
 	prim.colorfix = PRIM_UNFIXED;
  
-	color.r = 0x80;
-	color.g = 0x80;
-	color.b = 0x80;
-	color.a = 0x80;
-	color.q = 1.0f;
-	
-	lod.calculation = LOD_USE_K;
-	lod.max_level = 0;
-	lod.mag_filter = LOD_MAG_LINEAR;
-	lod.min_filter = LOD_MIN_LINEAR;
-	lod.l = 0;
-	lod.k = 0;
-	
 	tex.width = 1024;
 	tex.psm = GS_PSM_8;
 	tex.info.width = draw_log2(1024);
@@ -78,126 +56,84 @@ Object::Object(){
 	clut.psm = GS_PSM_32;
 }
 
-void Object::init(int pc, int vc, int * p, VECTOR * v, VECTOR * uv, VECTOR * n, unsigned char * t, unsigned char * c){
-	_points_count = pc;
+void Object::init(const Memory& memory, unsigned int vc, VECTOR * v, VECTOR * n, unsigned char * t, unsigned char * c){
+	tex.address = memory.texture;
+	clut.address = memory.palette;
+
 	_vertex_count = vc;
-	_points = p;
 	_vertices = v;
-	_uvs = uv;
 	_normals = n;
 	_texture = t;
 	_clut = c;
 }
 
-void Object::render(packet2_t * p, packet2_t * t, MATRIX world_view, MATRIX view_screen, Memory& memory){
+void Object::render(Commands& commands, Memory& memory, MATRIX world_view, MATRIX view_screen, VECTOR light_dir){
 	
-	packet2_reset(p, 0);
-	packet2_reset(t, 0);
+	// UPDATE
+	// Create the local_world matrix.
+	MATRIX local_world_rot;
+	MATRIX world_local_rot;
+	MATRIX local_world;
+	MATRIX local_screen;
+	// Create the local world matrix, and its translation-independent inverse.
+	matrix_unit(local_world_rot);
+	matrix_rotate(local_world_rot, local_world_rot, object_rotation);
+	matrix_transpose(world_local_rot, local_world_rot);
+	matrix_translate(local_world, local_world_rot, object_position);
+	// Create the local_screen matrix.
+	create_local_screen(local_screen, local_world, world_view, view_screen);
+	// And the local light direction.
+	VECTOR local_light_dir;
+	vector_apply(local_light_dir, light_dir, world_local_rot);
+	vector_normalize(local_light_dir, local_light_dir);
 
+	// Load the texture into vram.
+	packet2_t* t = commands.nextTexture();
 	packet2_update(t, draw_texture_transfer(t->next, _texture, 1024, 1024, GS_PSM_8, memory.texture, 1024));
 	packet2_update(t, draw_texture_transfer(t->next, _clut, 16, 16, GS_PSM_32, memory.palette, 16));
 	packet2_update(t, draw_texture_flush(t->next));
 	dma_channel_send_packet2(t, DMA_CHANNEL_GIF, 0);
 	dma_wait_fast();
 	
-	// Room for dma end tag
-	qword_t* start = (p->next)++;
-	// Texture sampling.
-	tex.address = memory.texture;
-	clut.address = memory.palette;
-	packet2_update(p, draw_texture_sampling(p->next, 0, &lod));
-	packet2_update(p, draw_texturebuffer(p->next, 0, &tex, &clut));
-	
-	// UPDATE
-	// Create the local_world matrix.
-	MATRIX local_world;
-	MATRIX local_light;
-	MATRIX local_screen;
-	// Create the local world matrix.
-	matrix_unit(local_world);
-	matrix_rotate(local_world, local_world, object_rotation);
-	matrix_translate(local_world, local_world, object_position);
-	// Create the local_screen matrix.
-	create_local_screen(local_screen, local_world, world_view, view_screen);
-	// Create the local light matrix.
-	create_local_light(local_light, object_rotation);
-	
-	// Calculate the normal values.
-	calculate_normals(memory.normals_tmp, _vertex_count, _normals, local_light);
-	
-	// Calculate the lighting values.
-	calculate_lights(memory.lights_tmp, _vertex_count, memory.normals_tmp, light_direction, light_color, light_type, 1);
-	
-	// Calculate the vertex values.
-	calculate_vertices_no_clip(memory.verts_tmp, _vertex_count, _vertices, local_screen);
-	
-	// Convert floating point vertices to fixed point and translate to center of screen.
-	draw_convert_xyz(memory.verts_final, 2048, 2048, 16, _vertex_count, (vertex_f_t*)memory.verts_tmp);
-	draw_convert_rgbq(memory.colors_final, _vertex_count, (vertex_f_t*)memory.verts_tmp, (color_f_t*)memory.lights_tmp, 0x80);
-	draw_convert_st(memory.uvs_final, _vertex_count, (vertex_f_t*)memory.verts_tmp, (texel_f_t*)_uvs);
-	
-	// QUEUE
-	// Draw the triangles using triangle primitive type.
-	packet2_update(p, draw_prim_start(p->next,0, &prim, &color));
-	u64 *dw = (u64*)(p->next);
-	
-	for(int i = 0; i < _points_count; i+=3){
-		
-		const int p0 = _points[i];
-		const int p1 = _points[i+1];
-		const int p2 = _points[i+2];
+	// Submit batches of vertices for processing on VU1.
+	for(unsigned int pIndex = 0; pIndex < _vertex_count; pIndex += BATCH_VERTEX_SIZE){
 
-		const float p0x = memory.verts_tmp[p0][0];
-		const float p0y = memory.verts_tmp[p0][1];
-		const float p1x = memory.verts_tmp[p1][0];
-		const float p1y = memory.verts_tmp[p1][1];
-		const float p2x = memory.verts_tmp[p2][0];
-		const float p2y = memory.verts_tmp[p2][1];
+		unsigned int vertexCount = _vertex_count - pIndex;
+		vertexCount = vertexCount > BATCH_VERTEX_SIZE ? BATCH_VERTEX_SIZE : vertexCount;
 
-		// Backface culling.
-		const float orientation = (p1x - p0x) * (p2y - p0y) - (p1y - p0y) * (p2x - p0x);
-		if(orientation < 0.0f) {
-			continue;
-		}
-		
-		// Clipping.
-		// As soon as one vertex is clipped, we discard the triangle.
-		// We rely on the relative high-density of the meshes to avoid having huge faces disappearing all of a sudden.
-		if(fabs(p0x) > 1.0f || fabs(p0y) > 1.0f || fabs(p1x) > 1.0f || fabs(p1y) > 1.0f || fabs(p2x) > 1.0f || fabs(p2y) > 1.0f){
-			continue;
-		}
+		// To keep things simple, rebuild the basic parameter packets at each batch.
+		packet2_t * p = commands.nextIndirect();
+		// Prescale light color for conversion, but keep it as float for computations.
+		packet2_add_float(p, 128.f); // White light	
+		packet2_add_float(p, 128.f); 
+		packet2_add_float(p, 128.f); 
+		packet2_add_s32(p, vertexCount); // Vertex count
+		packet2_utils_gs_add_texbuff_clut(p, &tex, &clut);
+		packet2_utils_gs_add_prim_giftag(p, &prim, vertexCount, DRAW_STQ2_REGLIST, 3, 0);
 
-		const float p0z = memory.verts_tmp[p0][2];
-		const float p1z = memory.verts_tmp[p1][2];
-		const float p2z = memory.verts_tmp[p2][2];
-		if(p0z < -1.f || p0z > 0.f || p1z < -1.f || p1z > 0.f || p2z < -1.f || p2z > 0.f){
-			continue;
-		}
-	
-		*dw++ = memory.colors_final[p0].rgbaq;
-		*dw++ = memory.uvs_final[p0].uv;
-		*dw++ = memory.verts_final[p0].xyz;
-		
-		*dw++ = memory.colors_final[p1].rgbaq;
-		*dw++ = memory.uvs_final[p1].uv;
-		*dw++ = memory.verts_final[p1].xyz;
-		
-		*dw++ = memory.colors_final[p2].rgbaq;
-		*dw++ = memory.uvs_final[p2].uv;
-		*dw++ = memory.verts_final[p2].xyz;
-		
+		// Schedule copies from data to VU1 memory.
+		packet2_t* vuPacket = commands.nextDraw();
+		u32 bufferOffsetQw = 0;
+
+		// Merge packets
+		packet2_utils_vu_add_unpack_data(vuPacket, bufferOffsetQw, p->base, packet2_get_qw_count(p), 1);
+		bufferOffsetQw += packet2_get_qw_count(p);
+		// Transformation data.
+		packet2_utils_vu_add_unpack_data(vuPacket, bufferOffsetQw, &local_screen, 4, 1);
+		bufferOffsetQw += 4;
+		packet2_utils_vu_add_unpack_data(vuPacket, bufferOffsetQw, &local_light_dir, 1, 1);
+		bufferOffsetQw += 1;
+		// Add vertices
+		packet2_utils_vu_add_unpack_data(vuPacket, bufferOffsetQw, _vertices + pIndex, vertexCount, 1);
+		bufferOffsetQw += vertexCount;
+		// Add normals
+		packet2_utils_vu_add_unpack_data(vuPacket, bufferOffsetQw, _normals + pIndex, vertexCount, 1);
+		bufferOffsetQw += vertexCount;
+
+		// Execute.
+		packet2_utils_vu_add_start_program(vuPacket, memory.programObject);
+		packet2_utils_vu_add_end_tag(vuPacket);
+		dma_channel_send_packet2(vuPacket, DMA_CHANNEL_VIF1, 1);
+		dma_wait_fast();
 	}
-	// Check if we're in middle of a qword or not.
-	while (reinterpret_cast<u32>(dw) % 16) {
-		*dw++ = 0u;
-	}
-	p->next = (qword_t*)dw;
-	
-	packet2_update(p, draw_prim_end(p->next,3,DRAW_STQ_REGLIST));
-	packet2_update(p, draw_finish(p->next));
-	DMATAG_END(start, p->next - start - 1, 0, 0, 0);
-
-	dma_channel_send_packet2(p, DMA_CHANNEL_GIF, 0);
-	dma_wait_fast();
-	
 }

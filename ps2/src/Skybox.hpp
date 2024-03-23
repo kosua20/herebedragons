@@ -9,6 +9,7 @@
 #include <cstring>
 
 struct Memory;
+struct Commands;
 
 class Skybox {
 	
@@ -16,28 +17,23 @@ public:
 	
 	Skybox();
 	
-	void render(packet2_t * packet, packet2_t * texturePacket, MATRIX world_view, MATRIX view_screen, VECTOR cam_pos, Memory& memory);
+	void render(Commands& commands, Memory& memory, MATRIX world_view, MATRIX view_screen);
 	
-	void init(int pc, int * p, int vc, VECTOR * v, VECTOR * uv, unsigned char* t[6], unsigned char * c[6]);
-	
+	void init(const Memory& memory,unsigned int vc, VECTOR * v, VECTOR * uv, unsigned char* t[6], unsigned char * c[6]);
 	
 private:
 	
 	Skybox(const Skybox &);
 	Skybox & operator = (const Skybox &);
 	
-	int _points_count;
-	int _vertex_count;
-	int * _points;
-	VECTOR * _vertices;
-	VECTOR * _uvs;
+	unsigned int _vertex_count;
+	VECTOR * _vertices __attribute__((aligned(128)));
+	VECTOR * _uvs __attribute__((aligned(128)));
 
 	unsigned char * _textures[6];
 	unsigned char * _cluts[6];
 	
 	prim_t prim;
-	color_t color;
-	lod_t lod;
 	texbuffer_t tex;
 	clutbuffer_t clut;
 };
